@@ -23,6 +23,14 @@ class CanvasSpec extends CommonSpec {
             canvas.output shouldBe "x   \n o  \n   o"
         }
 
+        "get the value of a pixel" in {
+            val canvas = CharCanvas.empty(4, 3)
+                .drawPoint(Point(0, 0), 'x')
+            canvas.valueAt(Point(0, 0)) shouldBe Some('x')
+            canvas.valueAt(Point(0, 1)) shouldBe Some(' ')
+            canvas.valueAt(Point(5, 1)) shouldBe None
+        }
+
         "ignore out of canvas positions" in {
             val canvas = CharCanvas.empty(4, 3)
                 .drawPoint(Point(-1, 0), 'x')
