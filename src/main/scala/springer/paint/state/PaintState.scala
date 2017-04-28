@@ -1,26 +1,18 @@
 package springer.paint.state
 
 /**
-  * Created by Nicolò Martini on 28/04/2017.
+  * PaintState: define an output with a canvas size
   */
-trait PaintState[Out] {
-    def output: Out
-    def size: Option[(Int, Int)]
+case class PaintState[Out](output: Out, size: Option[(Int, Int)]) {
     def hasCanvas: Boolean = size.isDefined
-
-    def withCanvas(width: Int, height: Int): PaintState[Out]
-}
-
-/**
-  * A Paint state whose output type is string
-  */
-case class StringPaintState(output: String, size: Option[(Int, Int)]) extends PaintState[String] {
-    def withCanvas(width: Int, height: Int): PaintState[String] =
+    def withCanvas(width: Int, height: Int): PaintState[Out] =
         copy(size = Some(width, height))
+    def withOutput(newOutput: Out): PaintState[Out] =
+        copy(output = newOutput)
 }
 
 object StringPaintState {
-    val empty: PaintState[String] = StringPaintState("", None)
+    val empty: PaintState[String] = PaintState[String]("", None)
 }
 
 
