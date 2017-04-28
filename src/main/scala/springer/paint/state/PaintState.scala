@@ -9,8 +9,9 @@ sealed trait PaintState[In, Out] {
         case Initialised(_) => true
         case _ => false
     }
-    def mapCanvas[In2, Out2](f: Canvas[In, Out] => Canvas[In2, Out2]): PaintState[In2, Out2] = this match {
+    def mapCanvas(f: Canvas[In, Out] => Canvas[In, Out]): PaintState[In, Out] = this match {
         case Initialised(canvas) => Initialised(f(canvas))
+        case _ => this
     }
 }
 

@@ -3,12 +3,13 @@ package springer.paint.painter
 import org.scalatest.{Inside, Matchers, WordSpec}
 import springer.paint.canvas.CharCanvas
 import springer.paint.dsl.NewCanvas
+import springer.paint.spec.CommonSpec
 import springer.paint.state.{Initialised, Uninitialised}
 
 /**
   * Created by Nicolò Martini on 28/04/2017.
   */
-class CanvasPainterSpec extends WordSpec with Matchers with Inside {
+class CanvasPainterSpec extends CommonSpec {
 
     "A Canvas Painter" must {
 

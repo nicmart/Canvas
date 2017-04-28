@@ -2,11 +2,12 @@ package springer.paint.canvas
 
 import org.scalatest.{Matchers, WordSpec}
 import springer.paint.point.Point
+import springer.paint.spec.CommonSpec
 
 /**
   * Created by Nicolò Martini on 28/04/2017.
   */
-class CanvasSpec extends WordSpec with Matchers {
+class CanvasSpec extends CommonSpec {
 
     "A CharCanvas" must {
         "give an empty canvas when a new one is created" in {
