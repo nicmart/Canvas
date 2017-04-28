@@ -1,6 +1,7 @@
 package springer.paint.painter
 import springer.paint.canvas.{Canvas, CharCanvas}
-import springer.paint.dsl.{NewCanvas, PaintDsl}
+import springer.paint.dsl.{HorizontalLine, NewCanvas, PaintDsl}
+import springer.paint.point.Point
 import springer.paint.state.{Initialised, PaintState}
 
 /**
@@ -12,5 +13,10 @@ class CanvasPainter extends Painter[Char, String] {
 
         case NewCanvas(width, height) =>
             Initialised(CharCanvas.empty(width, height))
+
+        case HorizontalLine(y, fromX, toX) =>
+            (fromX to toX).foldLeft(state) {
+                case (s, x) => s.mapCanvas(_.drawPoint(Point(x, y), 'x'))
+            }
     }
 }

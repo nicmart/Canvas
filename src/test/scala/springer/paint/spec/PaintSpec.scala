@@ -2,7 +2,7 @@ package springer.paint.spec
 
 import org.scalatest.{FeatureSpec, GivenWhenThen, Inside, Matchers}
 import springer.paint.canvas.CharCanvas
-import springer.paint.dsl.{NewCanvas, PaintDsl}
+import springer.paint.dsl.{HorizontalLine, NewCanvas, PaintDsl}
 import springer.paint.painter.{CanvasPainter, Painter}
 import springer.paint.state.{Initialised, PaintState, Uninitialised}
 
@@ -28,10 +28,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
 
             Then("I should see an empty canvas of the correct size")
 
-            inside(currentState) {
-                case Initialised(canvas) =>
-                    assert(canvas.output == List.fill(10)(" " * 20).mkString("\n"))
-            }
+            assertOutput(currentState, List.fill(10)(" " * 20).mkString("\n"))
         }
 
         scenario("User draws a new Canvas on an existing one") {
@@ -50,22 +47,29 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
 
             Then("I should see an empty canvas of the correct size")
 
-            inside(currentState) {
-                case Initialised(canvas) =>
-                    assert(canvas.output == List.fill(10)(" " * 10).mkString("\n"))
-            }
+            assertOutput(currentState, List.fill(10)(" " * 10).mkString("\n"))
         }
 
-        scenario("User draws an horizontal line") {
-//            Given("A painter")
-//            val painter: Painter[String] = new CanvasPainter
-//
-//            Given("An initial state")
-//            var currentState = StringPaintState.empty
+        scenario("A User draws an horizontal line") {
+            Given("A painter")
+            val painter: DefaultPainter = new CanvasPainter
 
+            Given("An initial canvas")
+            var currentState: DefaultPaintState = Initialised(CharCanvas.empty(4, 2))
+
+            When("the user draws an horizontal line")
+            currentState = painter(currentState, HorizontalLine(1, 0, 2))
+
+            Then("I should see an horizontal Line")
+
+            assertOutput(currentState, "    \nxxx ")
         }
     }
 
-
-
+    def assertOutput(state: DefaultPaintState, output: String) = {
+        inside(state) {
+            case Initialised(canvas) =>
+                assert(canvas.output == output)
+        }
+    }
 }
