@@ -18,6 +18,17 @@ class StringPainterSpec extends WordSpec with Matchers {
 
             painter(initialState, command).output shouldBe expectedOutput
         }
+
+        "drawing a new canvas should override the previous one" in {
+            val initialState = StringPaintState.empty
+            val painter = new StringPainter
+            val canvas1 = Canvas(20, 10)
+            val canvas2 = Canvas(10, 10)
+            val expectedOutput = List.fill(10)(" " * 10).mkString("\n")
+
+            val finalState = painter(painter(initialState, canvas1), canvas2)
+            finalState.output shouldBe expectedOutput
+        }
     }
 
 }
