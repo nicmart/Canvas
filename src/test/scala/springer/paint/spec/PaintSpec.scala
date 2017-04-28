@@ -1,6 +1,8 @@
 package springer.paint.spec
 
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
+import springer.paint.dsl.{Canvas, PaintDsl}
+import springer.paint.state.{PaintState, StringPaintState}
 
 
 /**
@@ -12,10 +14,10 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers {
         scenario("User creates a new Canvas") {
 
             Given("A painter")
-            val painter: (PaintState, PaintCommand) => PaintState
+            val painter: (PaintState[String], PaintDsl) => PaintState[String] = ???
 
             Given("An initial state")
-            var currentState = PaintState.empty
+            var currentState = StringPaintState.empty
 
             When("the user create a new canvas 20x10")
             currentState = painter(currentState, Canvas(20, 10))
