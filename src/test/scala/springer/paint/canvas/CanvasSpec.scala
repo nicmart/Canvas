@@ -37,6 +37,23 @@ class CanvasSpec extends CommonSpec {
                 .drawPoint(Point(4, 0), 'o')
             canvas.output shouldBe "    \n    \n    "
         }
+
+        "get the neighbours of a point" in {
+            CharCanvas.empty(4, 3).neighBoursOf(Point(0, 0)).toSet shouldBe List(
+                Point(0, 1),
+                Point(1, 0)
+            ).toSet
+            CharCanvas.empty(4, 3).neighBoursOf(Point(1, 1)).toSet shouldBe List(
+                Point(1, 0),
+                Point(2, 1),
+                Point(1, 2),
+                Point(0, 1)
+            ).toSet
+            CharCanvas.empty(2, 2).neighBoursOf(Point(1, 1)).toSet shouldBe List(
+                Point(1, 0),
+                Point(0, 1)
+            ).toSet
+        }
     }
 
 }
