@@ -10,6 +10,7 @@ trait Canvas[In, Out] {
     def height: Int
     def drawPoint(position: Point, input: In): Canvas[In, Out]
     def output: Out
+    def valueAt(position: Point): Option[In]
 }
 
 /**
@@ -20,6 +21,9 @@ case class CharCanvas(
     height: Int,
     private val pixels: Vector[String]
 ) extends Canvas[Char, String] {
+    /**
+      *
+      */
     def drawPoint(position: Point, input: Char): Canvas[Char, String] = {
         if (isPointInCanvas(position)) {
             var oldRow = pixels(position.y)
@@ -29,6 +33,10 @@ case class CharCanvas(
     }
 
     def output: String = pixels.mkString("\n")
+    def valueAt(position: Point): Option[Char] =
+        if (isPointInCanvas(position)) {
+            Some(pixels(position.y)(position.x))
+        } else None
 
     private def isPointInCanvas(p: Point): Boolean = {
         p.x >= 0 && p.x < width && p.y >= 0 && p.y < height
