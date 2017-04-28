@@ -5,4 +5,4 @@ package springer.paint.dsl
   */
 sealed trait PaintDsl
 
-final case class Canvas(width: Int, height: Int) extends PaintDsl
+final case class NewCanvas(width: Int, height: Int) extends PaintDsl
