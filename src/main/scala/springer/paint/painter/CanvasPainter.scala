@@ -2,9 +2,10 @@ package springer.paint.painter
 import springer.paint.canvas.{Canvas, CharCanvas}
 import springer.paint.dsl._
 import springer.paint.point.Point
-import springer.paint.state.{Initialised, PaintState}
+import springer.paint.state.{Initialised, PaintState, Uninitialised}
 
 import scala.annotation.tailrec
+import scala.collection.immutable.Queue
 
 /**
   * This is a painter that paints on a CharCanvas
@@ -33,6 +34,23 @@ class CanvasPainter extends Painter[Char, String] {
             HorizontalLine(lowerRight.y, upperLeft.x, lowerRight.x),
             VerticalLine(upperLeft.x, upperLeft.y, lowerRight.y)
         )
+
+        case Fill(from, value) => state.mapCanvas { canvas =>
+            canvas.valueAt(from) match {
+                case None => canvas
+                case Some(color) =>
+                    var newCanvas = canvas
+                    var queue: Queue[Point] = Queue.empty.enqueue(from)
+                    while (queue.nonEmpty) {
+                        val (point, dequeued) = queue.dequeue
+                        newCanvas = newCanvas.drawPoint(point, value)
+                        queue = dequeued.enqueue(newCanvas.neighBoursOf(point).filter { point =>
+                            newCanvas.valueAt(point).contains(color)
+                        })
+                    }
+                    newCanvas
+            }
+        }
 
     }
 

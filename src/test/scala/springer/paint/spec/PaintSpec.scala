@@ -95,6 +95,22 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
 
             assertOutput(currentState, "     \n xxx \n x x \n xxx \n     ")
         }
+
+        scenario("A User bucket-fills starting from a point") {
+            Given("A painter")
+            val painter: DefaultPainter = new CanvasPainter
+
+            Given("An initial canvas")
+            var currentState: DefaultPaintState = Initialised(CharCanvas.empty(5, 5))
+
+            When("the user draws a line")
+            currentState = painter(currentState, VerticalLine(2, 0, 4))
+
+            When("the users bucket-fill from 0, 0")
+            currentState = painter(currentState, Fill(Point(0, 0), 'o'))
+
+            assertOutput(currentState, "oox  \noox  \noox  \noox  \noox  ")
+        }
     }
 
     def assertOutput(state: DefaultPaintState, output: String) = {
