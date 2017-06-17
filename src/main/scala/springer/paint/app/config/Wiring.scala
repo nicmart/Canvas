@@ -1,8 +1,7 @@
 package springer.paint.app.config
 
 import springer.paint.canvas.Canvas
-import springer.paint.canvas.Canvas
-import springer.paint.painter.Painter
+import springer.paint.painter.{CanvasPainter, Painter}
 import springer.paint.state.{PaintState, Uninitialised}
 
 /**
@@ -12,7 +11,8 @@ trait Wiring {
     type PainterOutput = Canvas[Char, String]
     type DefaultPaintState = PaintState[Char, String]
     type DefaultPainter = Painter[Char, String]
-    val initialState = Uninitialised[Char, String]()
+    lazy val initialState = Uninitialised[Char, String]()
+    lazy val painter = new CanvasPainter
 }
 
 object Wiring extends Wiring

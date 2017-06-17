@@ -1,6 +1,5 @@
 package springer.paint.painter
 
-import org.scalatest.{Inside, Matchers, WordSpec}
 import springer.paint.canvas.CharCanvas
 import springer.paint.dsl.NewCanvas
 import springer.paint.spec.CommonSpec
