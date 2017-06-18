@@ -59,4 +59,22 @@ class CommandParserSpec extends CommonParserSpec {
             }
         }
     }
+
+    "A combined parser" should {
+        "apply the two parsers in sequence, and the apply the combining function" in {
+            val parser = combine(int, int)(_ + _)
+            parser.parse(tokenize("10 20 30")) shouldBe Success(30, List("30"))
+        }
+
+        "fail if the first parser fails" in {
+            val parser = combine(failing("e"): CommandParser[Int], int)(_ + _)
+            parser.parse(tokenize("10 20 30")) shouldBe Failure("e")
+        }
+
+        "fail if the second parser fails" in {
+            val parser = combine(int, failing("e"): CommandParser[Int])(_ + _)
+            parser.parse(tokenize("10 20 30")) shouldBe Failure("e")
+        }
+
+    }
 }

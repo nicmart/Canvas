@@ -9,7 +9,7 @@ import CommandParser._
   */
 object HorizontalLineParser extends CommandParser[HorizontalLine] {
     def parse(tokens: List[String]): CommandParserResult[HorizontalLine] = {
-        val parsedInts = sequenceOf(nonNegativeInt, 4).parse(tokens)
+        val parsedInts = sequenceOf(int, 4).parse(tokens)
         parsedInts.mapSuccess { success =>
             success.value match {
                 case x1 :: y1 :: x2 :: y2 :: tail if y1 == y2 =>

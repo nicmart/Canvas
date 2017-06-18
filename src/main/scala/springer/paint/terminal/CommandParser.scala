@@ -28,11 +28,17 @@ trait CommandParser[+T] { self =>
     def map[S](f: T => S): CommandParser[S] =
         (tokens: List[String]) => self.parse(tokens).map(f)
 
+    def flatMap[S](f: T => CommandParser[S]) =
+        (tokens: List[String]) => self.parse(tokens).flatMap(f(_).parse(tokens))
+
     /**
       * Return a new parser whose successful result will be mapped through f
       */
     def mapSuccess[S](f: Success[T] => CommandParserResult[S]): CommandParser[S] =
         (tokens: List[String]) => self.parse(tokens).mapSuccess(f)
+
+    def filter(predicate: T => Boolean, message: String): CommandParser[T] =
+        mapSuccess { success => if (predicate(success.value)) success else Failure(message) }
 
     /**
       * Flatten a parser of parser of S into a parser of S
@@ -67,6 +73,9 @@ object CommandParser {
         def map[S](f: T => S): CommandParserResult[S] = mapSuccess { success =>
             Success(f(success.value), success.tail)
         }
+
+        def flatMap[S](f: T => CommandParserResult[S]): CommandParserResult[S] =
+            mapSuccess { success => f(success.value) }
 
         /**
           * Map a successful parser result into another result
@@ -112,6 +121,19 @@ object CommandParser {
                 Failure("No tokens found")
         }
 
+    val nonNegativeInt: CommandParser[Int] =
+        int.filter(_ >= 0, "Integer must be non-negative")
+
+    val positiveInt: CommandParser[Int] =
+        int.filter(_ > 0, "Integer must be positive")
+
+    def rangeInt(from: Int, to: Int): CommandParser[Int] =
+        int.filter(n => n >= from && n <= to, s"Integer must be between $from and $to")
+
+    /**
+      * Parse a sequence of tokens with the same parser, and collect the result
+      * in a list. In case of failure, return the first failure.
+      */
     def sequenceOf[T](parser: CommandParser[T], n: Int): CommandParser[List[T]] = {
         n match {
             case _ if n <= 0 => failing("Impossible applying a parser 0 or less times")
@@ -120,6 +142,15 @@ object CommandParser {
                 parser.parse(tokens).mapSuccess { success =>
                     sequenceOf(parser, n - 1).parse(success.tail).map(success.value :: _)
                 }
+        }
+    }
+
+    def combine[T, S, U](
+        parser1: CommandParser[T],
+        parser2: CommandParser[S])(
+        f: (T, S) => U): CommandParser[U] = {
+        parser1.mapSuccess { success =>
+            parser2.parse(success.tail).map(f(success.value, _))
         }
     }
 }
