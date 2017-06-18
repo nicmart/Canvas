@@ -1,8 +1,7 @@
 package springer.paint.terminal
 
-/**
-  * Created by Nicolò Martini on 18/06/2017.
-  */
-class CommonParserSpec {
+import springer.paint.spec.CommonSpec
 
+trait CommonParserSpec extends CommonSpec {
+    def tokenize(input: String): List[String] = input.split(" ").toList
 }

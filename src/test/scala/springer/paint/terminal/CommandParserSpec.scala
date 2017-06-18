@@ -31,4 +31,13 @@ class CommandParserSpec extends CommonSpec {
             }
         }
     }
+
+    "An int parser" should {
+        "parse a valid int" in {
+            int.parse(List("123")) shouldBe Success(123, Nil)
+        }
+        "refuse an invalid int" in {
+            inside(int.parse(List("aaa"))) { case Failure(_) => }
+        }
+    }
 }

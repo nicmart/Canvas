@@ -1,5 +1,8 @@
 package springer.paint.terminal
+import scala.util.control.Exception._
 import CommandParser._
+
+import scala.util.Try
 
 /**
   * Parse a list of tokens into something else
@@ -68,5 +71,15 @@ object CommandParser {
             case head :: tail if head == token =>
                 Success(parsed, tail)
             case _ => Failure(s"Token $token not found")
+        }
+
+    val int: CommandParser[Int] =
+        (tokens: List[String]) => tokens match {
+            case head :: tail =>
+                Try(head.toInt)
+                    .map(Success(_, tail))
+                    .getOrElse(Failure("Not a valid integer"))
+            case _ =>
+                Failure("No tokens found")
         }
 }
