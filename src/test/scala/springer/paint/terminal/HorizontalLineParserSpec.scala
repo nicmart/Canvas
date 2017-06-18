@@ -12,14 +12,12 @@ class HorizontalLineParserSpec extends CommonParserSpec {
         }
         "refuse non horizontal line commands" in {
             val tokens = tokenize("0 1 10 0")
-            val expectedCommand = HorizontalLine(0, 0, 10)
             inside(HorizontalLineParser.parse(tokens)) {
                 case Failure(_) =>
             }
         }
         "refuse other malformed commands" in {
             val tokens = tokenize("10 20 30")
-            val expectedCommand = HorizontalLine(0, 0, 10)
             inside(HorizontalLineParser.parse(tokens)) {
                 case Failure(_) =>
             }

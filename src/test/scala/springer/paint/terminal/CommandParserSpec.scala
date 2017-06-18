@@ -2,7 +2,7 @@ package springer.paint.terminal
 
 import springer.paint.spec.CommonSpec
 
-class CommandParserSpec extends CommonSpec {
+class CommandParserSpec extends CommonParserSpec {
     import CommandParser._
     "A CommandParser" should {
         "be able to combine with another one with an OR" in {
@@ -10,6 +10,10 @@ class CommandParserSpec extends CommonSpec {
             (successful("a") or failing("e")).parse(Nil) shouldBe Success("a", Nil)
             (failing("e") or successful("a")).parse(Nil) shouldBe Success("a", Nil)
             (failing("a") or failing("b")).parse(Nil) shouldBe Failure("b")
+        }
+        "be able to map successful parsed values with a function" in {
+            successful("a").map(_ * 2).parse(Nil) shouldBe Success("aa", Nil)
+            failing("e").map(_ => "b").parse(Nil) shouldBe Failure("e")
         }
     }
 
@@ -38,6 +42,21 @@ class CommandParserSpec extends CommonSpec {
         }
         "refuse an invalid int" in {
             inside(int.parse(List("aaa"))) { case Failure(_) => }
+        }
+    }
+
+    "A sequence parser" should {
+        "parse a sequence of elements and return them in a list" in {
+            val tokens = tokenize("10 20 30 40")
+            val expected = Success(List(10, 20, 30), List("40"))
+            sequenceOf(int, 3).parse(tokens) shouldBe expected
+        }
+
+        "fail when an element int the sequence is unparsable" in {
+            val tokens = tokenize("10 20 aaa 40")
+            inside(sequenceOf(int, 3).parse(tokens)) {
+                case Failure(_) =>
+            }
         }
     }
 }

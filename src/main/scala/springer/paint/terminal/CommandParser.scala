@@ -22,6 +22,19 @@ trait CommandParser[+T] { self =>
         (tokens: List[String]) => self.parse(tokens) or fallbackParser.parse(tokens)
 
     /**
+      * Return a new parser that will return parsed values mapped with
+      * the provided function
+      */
+    def map[S](f: T => S): CommandParser[S] =
+        (tokens: List[String]) => self.parse(tokens).map(f)
+
+    /**
+      * Return a new parser whose successful result will be mapped through f
+      */
+    def mapSuccess[S](f: Success[T] => CommandParserResult[S]): CommandParser[S] =
+        (tokens: List[String]) => self.parse(tokens).mapSuccess(f)
+
+    /**
       * Flatten a parser of parser of S into a parser of S
       */
     def flatten[S](failure: Option[Failure] = None)
@@ -36,7 +49,7 @@ object CommandParser {
     /**
       * The possible result of a parsing
       */
-    sealed trait CommandParserResult[+T] {
+    sealed trait CommandParserResult[+T] { self =>
         /**
           * Combine this result with another one, taking the first that succeeds, or tha last
           * failure
@@ -47,6 +60,22 @@ object CommandParser {
             case Success(_, _) => this
             case _ => parserResult
         }
+
+        /**
+          * Map the parsed value in case of success
+          */
+        def map[S](f: T => S): CommandParserResult[S] = mapSuccess { success =>
+            Success(f(success.value), success.tail)
+        }
+
+        /**
+          * Map a successful parser result into another result
+          */
+        def mapSuccess[S](f: Success[T] => CommandParserResult[S]): CommandParserResult[S] = this match {
+            case success@Success(_, _) => f(success)
+            case failure@Failure(_) => failure
+        }
+
     }
     final case class Success[+T](value: T, tail: List[String]) extends CommandParserResult[T]
     final case class Failure(error: String) extends CommandParserResult[Nothing]
@@ -82,4 +111,15 @@ object CommandParser {
             case _ =>
                 Failure("No tokens found")
         }
+
+    def sequenceOf[T](parser: CommandParser[T], n: Int): CommandParser[List[T]] = {
+        n match {
+            case _ if n <= 0 => failing("Impossible applying a parser 0 or less times")
+            case _ if n == 1 => parser.map(List(_))
+            case _ => (tokens: List[String]) =>
+                parser.parse(tokens).mapSuccess { success =>
+                    sequenceOf(parser, n - 1).parse(success.tail).map(success.value :: _)
+                }
+        }
+    }
 }
