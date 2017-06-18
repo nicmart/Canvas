@@ -111,6 +111,20 @@ object CommandParser {
             case _ => Failure(s"Token $token not found")
         }
 
+    /**
+      * Always parse the first token and return it
+      */
+    val first: CommandParser[String] =
+        (tokens: List[String]) => tokens match {
+            case head :: tail => Success(head, tail)
+            case _ => Failure("No tokens found")
+        }
+
+    var char: CommandParser[Char] =
+        first
+            .filter(_.length == 1, "Expected a string of length 1")
+            .map(_.headOption.getOrElse(' '))
+
     val int: CommandParser[Int] =
         (tokens: List[String]) => tokens match {
             case head :: tail =>

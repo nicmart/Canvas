@@ -12,7 +12,7 @@ trait Canvas[In, Out] {
     def output: Out
     def valueAt(position: Point): Option[In]
 
-    def neighBoursOf(position: Point): List[Point] = List(
+    def neighboursOf(position: Point): List[Point] = List(
         position + Point(0, 1),
         position + Point(1, 0),
         position + Point(0, -1),
@@ -43,7 +43,8 @@ case class CharCanvas(
         } else this
     }
 
-    def output: String = pixels.mkString("\n")
+    def output: String =
+        pixels.map(line => line.toCharArray.mkString(" ")).mkString("\n")
 
     def valueAt(position: Point): Option[Char] =
         if (isPointInCanvas(position)) {

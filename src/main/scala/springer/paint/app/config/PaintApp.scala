@@ -1,8 +1,6 @@
 package springer.paint.app.config
 
-import springer.paint.dsl.GetCommand
-import springer.paint.state.PaintState
-import springer.paint.terminal.DefaultStringParser
+import springer.paint.terminal.CommandParser.{Failure, Success}
 
 import scala.io.StdIn
 
@@ -13,18 +11,20 @@ object PaintApp extends App {
 
     var state: Wiring.DefaultPaintState = Wiring.initialState
     val painter = Wiring.painter
-    val parser = DefaultStringParser
+    val parser = Wiring.parser
 
     while (true) {
         val line = StdIn.readLine("Enter command: ")
-        parser.parse(line) match {
-            case Some(command) =>
+        val tokens = line.split(" ").toList
+        parser.parse(tokens) match {
+            case Success(command, Nil) =>
                 state = painter(state, command)
                 state.mapCanvas { canvas =>
                     println(canvas.output)
                     canvas
                 }
-            case None => println("Unrecognized command")
+            case Success(command, _) => println("Too many characters in the command!")
+            case Failure(error) => println(error)
         }
     }
 }

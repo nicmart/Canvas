@@ -8,7 +8,7 @@ import springer.paint.terminal.CommandParser._
   */
 object VerticalLineParser extends CommandParser[VerticalLine] {
     def parse(tokens: List[String]): CommandParserResult[VerticalLine] = {
-        val parsedInts = sequenceOf(int, 4).parse(tokens)
+        val parsedInts = times(int, 4).parse(tokens)
         parsedInts.mapSuccess { success =>
             success.value match {
                 case x1 :: y1 :: x2 :: y2 :: tail if x1 == x2 =>

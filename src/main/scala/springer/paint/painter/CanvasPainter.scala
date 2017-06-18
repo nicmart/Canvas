@@ -43,10 +43,14 @@ class CanvasPainter extends Painter[Char, String] {
                     var queue: Queue[Point] = Queue.empty.enqueue(from)
                     while (queue.nonEmpty) {
                         val (point, dequeued) = queue.dequeue
-                        newCanvas = newCanvas.drawPoint(point, value)
-                        queue = dequeued.enqueue(newCanvas.neighBoursOf(point).filter { point =>
-                            newCanvas.valueAt(point).contains(color)
-                        })
+                        if (newCanvas.valueAt(point).contains(color)) {
+                            newCanvas = newCanvas.drawPoint(point, value)
+                            queue = dequeued.enqueue(newCanvas.neighboursOf(point).filter { point =>
+                                newCanvas.valueAt(point).contains(color)
+                            })
+                        } else {
+                            queue = dequeued
+                        }
                     }
                     newCanvas
             }
