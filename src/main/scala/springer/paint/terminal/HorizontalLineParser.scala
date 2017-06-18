@@ -9,15 +9,13 @@ import CommandParser._
   */
 object HorizontalLineParser extends CommandParser[HorizontalLine] {
     def parse(tokens: List[String]): CommandParserResult[HorizontalLine] = {
-        val parsedInts = sequenceOf(int, 4).parse(tokens)
+        val parsedInts = sequenceOf(nonNegativeInt, 4).parse(tokens)
         parsedInts.mapSuccess { success =>
             success.value match {
                 case x1 :: y1 :: x2 :: y2 :: tail if y1 == y2 =>
-                    Success(HorizontalLine(y1.toInt, x1.toInt, x2.toInt), success.tail)
-                case x1 :: y1 :: x2 :: y2 :: tail =>
-                    Failure("Line not valid")
+                    Success(HorizontalLine(y1, x1, x2), success.tail)
                 case _ =>
-                    Failure("An horizontal line should be a sequence of 4 integers")
+                    Failure("Line not valid")
             }
         }
     }
