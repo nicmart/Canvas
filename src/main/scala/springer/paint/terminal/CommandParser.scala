@@ -134,21 +134,25 @@ object CommandParser {
       * Parse a sequence of tokens with the same parser, and collect the result
       * in a list. In case of failure, return the first failure.
       */
-    def sequenceOf[T](parser: CommandParser[T], n: Int): CommandParser[List[T]] = {
-        n match {
-            case _ if n <= 0 => failing("Impossible applying a parser 0 or less times")
-            case _ if n == 1 => parser.map(List(_))
-            case _ => (tokens: List[String]) =>
-                parser.parse(tokens).mapSuccess { success =>
-                    sequenceOf(parser, n - 1).parse(success.tail).map(success.value :: _)
-                }
+    def times[T](parser: CommandParser[T], n: Int): CommandParser[List[T]] =
+        sequence(List.fill(n)(parser): _*)
+
+    /**
+      * Apply one parser after the other, and collect the results in a list
+      */
+    def sequence[T](parsers: CommandParser[T]*): CommandParser[List[T]] = {
+        parsers.toList match {
+            case parser :: tail =>
+                combine(parser, sequence(tail: _*))(_ :: _)
+            case Nil => successful(Nil)
         }
     }
 
     def combine[T, S, U](
         parser1: CommandParser[T],
         parser2: CommandParser[S])(
-        f: (T, S) => U): CommandParser[U] = {
+        f: (T, S) => U
+    ): CommandParser[U] = {
         parser1.mapSuccess { success =>
             parser2.parse(success.tail).map(f(success.value, _))
         }

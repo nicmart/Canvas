@@ -47,14 +47,29 @@ class CommandParserSpec extends CommonParserSpec {
 
     "A sequence parser" should {
         "parse a sequence of elements and return them in a list" in {
+            val tokens = tokenize("10 a 40")
+            val expected = Success(List(10, 11), List("40"))
+            sequence[Int](int, single("a", 11)).parse(tokens) shouldBe expected
+        }
+
+        "fail when an element int the sequence is unparsable" in {
+            val tokens = tokenize("10 b aaa 40")
+            inside(sequence(int, single("a", 10)).parse(tokens)) {
+                case Failure(_) =>
+            }
+        }
+    }
+
+    "A times parser" should {
+        "parse a sequence of elements and return them in a list" in {
             val tokens = tokenize("10 20 30 40")
             val expected = Success(List(10, 20, 30), List("40"))
-            sequenceOf(int, 3).parse(tokens) shouldBe expected
+            times(int, 3).parse(tokens) shouldBe expected
         }
 
         "fail when an element int the sequence is unparsable" in {
             val tokens = tokenize("10 20 aaa 40")
-            inside(sequenceOf(int, 3).parse(tokens)) {
+            inside(times(int, 3).parse(tokens)) {
                 case Failure(_) =>
             }
         }
