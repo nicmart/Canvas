@@ -26,9 +26,6 @@ trait Parser[+T] { self =>
     def map[S](f: T => S): Parser[S] =
         (tokens: List[String]) => self.parse(tokens).map(f)
 
-    def flatMap[S](f: T => Parser[S]) =
-        (tokens: List[String]) => self.parse(tokens).flatMap(f(_).parse(tokens))
-
     /**
       * Return a new parser whose successful result will be mapped through f
       */
