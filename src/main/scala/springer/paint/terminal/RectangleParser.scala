@@ -3,6 +3,7 @@ package springer.paint.terminal
 import springer.paint.dsl.Rectangle
 import springer.paint.point.Point
 import Parser._
+import CommonParsers._
 
 /**
   * Created by Nicolò Martini on 17/06/2017.

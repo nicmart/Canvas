@@ -2,6 +2,7 @@ package springer.paint.terminal
 
 import springer.paint.dsl.NewCanvas
 import Parser._
+import CommonParsers._
 
 /**
   * Created by Nicolò Martini on 17/06/2017.

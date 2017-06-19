@@ -2,6 +2,7 @@ package springer.paint.terminal
 
 import springer.paint.dsl.VerticalLine
 import springer.paint.terminal.Parser._
+import CommonParsers._
 
 /**
   * Parse a vertical line command

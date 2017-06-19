@@ -6,7 +6,7 @@ import springer.paint.point.Point
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.
   */
-class FillParserSpec extends CommonParserSpec {
+class FillParserSpec extends BaseParserSpec {
     "A Fill parser" should {
         "parse a valid command" in {
             FillParser.parse(tokenize("10 10 c")) shouldBe Success(Fill(Point(10, 10), 'c'), Nil)

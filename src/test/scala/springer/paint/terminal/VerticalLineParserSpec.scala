@@ -2,7 +2,7 @@ package springer.paint.terminal
 
 import springer.paint.dsl.VerticalLine
 
-class VerticalLineParserSpec extends CommonParserSpec {
+class VerticalLineParserSpec extends BaseParserSpec {
     "An Vertical Line Parser" should {
         "parse valid vertical line commands" in {
             val tokens = tokenize("0 0 0 10")

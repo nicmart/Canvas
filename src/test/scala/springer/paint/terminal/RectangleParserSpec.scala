@@ -6,7 +6,7 @@ import springer.paint.point.Point
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.
   */
-class RectangleParserSpec extends CommonParserSpec {
+class RectangleParserSpec extends BaseParserSpec {
     "A Rectangle Parser" should {
         "parse a valid rectangle" in {
             val tokens = tokenize("0 0 10 5")

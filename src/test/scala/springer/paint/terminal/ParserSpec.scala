@@ -1,7 +1,9 @@
 package springer.paint.terminal
+import Parser._
+import CommonParsers._
 
-class ParserSpec extends CommonParserSpec {
-    import Parser._
+class ParserSpec extends BaseParserSpec {
+
     "A CommandParser" should {
         "be able to combine with another one with an OR" in {
             (successful("a") or successful("b")).parse(Nil) shouldBe Success("a", Nil)
@@ -15,31 +17,12 @@ class ParserSpec extends CommonParserSpec {
         }
     }
 
-    "A CommandParser of a CommandParser" should {
+    "A nested parser" should {
         "concatenate the parsers when flattened" in {
             val parser: Parser[Parser[String]] =
                 (tokens: List[String]) => Success(successful(tokens.headOption.getOrElse("")), tokens)
 
             parser.flatten().parse(List("a", "b")) shouldBe Success("a", List("a", "b"))
-        }
-    }
-
-    "A Single token parser" should {
-        "parse the first token by exact match" in {
-            val parser = single("a", 123)
-            parser.parse(List("a", "b", "c")) shouldBe Success(123, List("b", "c"))
-            inside(parser.parse(List("x", "b", "c"))) {
-                case Failure(_) =>
-            }
-        }
-    }
-
-    "An int parser" should {
-        "parse a valid int" in {
-            int.parse(List("123")) shouldBe Success(123, Nil)
-        }
-        "refuse an invalid int" in {
-            inside(int.parse(List("aaa"))) { case Failure(_) => }
         }
     }
 

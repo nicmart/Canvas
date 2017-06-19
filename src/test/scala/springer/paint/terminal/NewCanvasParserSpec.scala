@@ -5,7 +5,7 @@ import springer.paint.dsl.NewCanvas
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.
   */
-class NewCanvasParserSpec extends CommonParserSpec {
+class NewCanvasParserSpec extends BaseParserSpec {
     "A New Canvas Parser Spec" should {
 
         "parse a valid new canvas command" in {

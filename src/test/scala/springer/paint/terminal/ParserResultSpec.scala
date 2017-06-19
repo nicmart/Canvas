@@ -3,7 +3,7 @@ package springer.paint.terminal
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.
   */
-class ParserResultSpec extends CommonParserSpec{
+class ParserResultSpec extends BaseParserSpec{
     "A Successful parser result" should {
         "return itself when or-ed with any another result" in {
             val successful1 = Success(123)

@@ -2,6 +2,7 @@ package springer.paint.terminal
 
 import springer.paint.dsl.{HorizontalLine, PaintDsl, TerminalDsl}
 import Parser._
+import CommonParsers._
 
 /**
   * Parse an horizontal line command

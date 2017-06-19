@@ -4,7 +4,7 @@ import springer.paint.canvas.Canvas
 import springer.paint.painter.{CanvasPainter, Painter}
 import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.terminal._
-import Parser.{single, _}
+import CommonParsers._
 
 /**
   * Created by Nicolò Martini on 28/04/2017.

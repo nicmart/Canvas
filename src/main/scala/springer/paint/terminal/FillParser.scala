@@ -3,6 +3,7 @@ package springer.paint.terminal
 import springer.paint.dsl.Fill
 import springer.paint.point.Point
 import Parser._
+import CommonParsers._
 
 /**
   * Created by Nicolò Martini

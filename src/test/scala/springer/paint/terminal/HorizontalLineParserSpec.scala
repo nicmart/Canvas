@@ -2,7 +2,7 @@ package springer.paint.terminal
 
 import springer.paint.dsl.HorizontalLine
 
-class HorizontalLineParserSpec extends CommonParserSpec {
+class HorizontalLineParserSpec extends BaseParserSpec {
     "An Horizontal Line Parser" should {
         "parse valid horizontal line commands" in {
             val tokens = tokenize("0 0 10 0")
