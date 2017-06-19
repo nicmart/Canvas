@@ -19,12 +19,12 @@ class CanvasPainter extends Painter[Char, String] {
             Initialised(CharCanvas.empty(width, height))
 
         case HorizontalLine(y, fromX, toX) =>
-            (fromX to toX).foldLeft(state) {
+            range(fromX, toX).foldLeft(state) {
                 case (s, x) => s.mapCanvas(_.drawPoint(Point(x, y), 'x'))
             }
 
         case VerticalLine(x, fromY, toY) =>
-            (fromY to toY).foldLeft(state) {
+            range(fromY, toY).foldLeft(state) {
                 case (s, y) => s.mapCanvas(_.drawPoint(Point(x, y), 'x'))
             }
 
@@ -58,11 +58,25 @@ class CanvasPainter extends Painter[Char, String] {
 
     }
 
+    /**
+      * Apply a sequence of commands to a state
+      */
     @tailrec
     private def sequence(state: State)(commands: PaintDsl*): State = {
         if (commands.isEmpty) state
         else {
             sequence(apply(state, commands.head))(commands.tail: _*)
+        }
+    }
+
+    /**
+      * A range where the elements can be given in any order
+      */
+    private def range(start: Int, end: Int): Range = {
+        if (start <= end) {
+            start to end
+        } else {
+            start to end by -1
         }
     }
 }
