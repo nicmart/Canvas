@@ -1,14 +1,13 @@
 package springer.paint.terminal
 
 import springer.paint.dsl.{HorizontalLine, PaintDsl, TerminalDsl}
-import springer.paint.terminal.CommandParser.{CommandParserResult, Failure, Success}
-import CommandParser._
+import Parser._
 
 /**
   * Parse an horizontal line command
   */
-object HorizontalLineParser extends CommandParser[HorizontalLine] {
-    def parse(tokens: List[String]): CommandParserResult[HorizontalLine] = {
+object HorizontalLineParser extends Parser[HorizontalLine] {
+    def parse(tokens: List[String]): ParserResult[HorizontalLine] = {
         val parsedInts = times(int, 4).parse(tokens)
         parsedInts.mapSuccess { success =>
             success.value match {

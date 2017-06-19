@@ -1,7 +1,6 @@
 package springer.paint.terminal
 
 import springer.paint.dsl.HorizontalLine
-import springer.paint.terminal.CommandParser.{Failure, Success}
 
 class HorizontalLineParserSpec extends CommonParserSpec {
     "An Horizontal Line Parser" should {

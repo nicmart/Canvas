@@ -1,6 +1,6 @@
 package springer.paint.app.config
 
-import springer.paint.terminal.CommandParser.{Failure, Success}
+import springer.paint.terminal._
 
 import scala.io.StdIn
 

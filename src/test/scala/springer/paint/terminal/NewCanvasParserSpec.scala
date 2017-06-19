@@ -1,7 +1,6 @@
 package springer.paint.terminal
 
 import springer.paint.dsl.NewCanvas
-import springer.paint.terminal.CommandParser.{Failure, Success}
 
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.

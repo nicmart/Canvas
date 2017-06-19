@@ -1,7 +1,6 @@
 package springer.paint.terminal
 
 import springer.paint.dsl.VerticalLine
-import springer.paint.terminal.CommandParser.{Failure, Success}
 
 class VerticalLineParserSpec extends CommonParserSpec {
     "An Vertical Line Parser" should {

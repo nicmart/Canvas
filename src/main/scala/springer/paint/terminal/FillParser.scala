@@ -2,17 +2,16 @@ package springer.paint.terminal
 
 import springer.paint.dsl.Fill
 import springer.paint.point.Point
-import springer.paint.terminal.CommandParser.{CommandParserResult, Failure, Success}
-import CommandParser._
+import Parser._
 
 /**
   * Created by Nicolò Martini
   */
-object FillParser extends CommandParser[Fill]{
+object FillParser extends Parser[Fill]{
     /**
       * Transform a list of token into a command parser result
       */
-    def parse(tokens: List[String]): CommandParserResult[Fill] = {
+    def parse(tokens: List[String]): ParserResult[Fill] = {
         val pointParser = combine(int, int)(Point)
         combine(pointParser, char)(Fill).parse(tokens)
     }

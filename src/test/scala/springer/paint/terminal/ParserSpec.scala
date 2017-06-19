@@ -1,9 +1,7 @@
 package springer.paint.terminal
 
-import springer.paint.spec.CommonSpec
-
-class CommandParserSpec extends CommonParserSpec {
-    import CommandParser._
+class ParserSpec extends CommonParserSpec {
+    import Parser._
     "A CommandParser" should {
         "be able to combine with another one with an OR" in {
             (successful("a") or successful("b")).parse(Nil) shouldBe Success("a", Nil)
@@ -19,7 +17,7 @@ class CommandParserSpec extends CommonParserSpec {
 
     "A CommandParser of a CommandParser" should {
         "concatenate the parsers when flattened" in {
-            val parser: CommandParser[CommandParser[String]] =
+            val parser: Parser[Parser[String]] =
                 (tokens: List[String]) => Success(successful(tokens.headOption.getOrElse("")), tokens)
 
             parser.flatten().parse(List("a", "b")) shouldBe Success("a", List("a", "b"))
@@ -82,12 +80,12 @@ class CommandParserSpec extends CommonParserSpec {
         }
 
         "fail if the first parser fails" in {
-            val parser = combine(failing("e"): CommandParser[Int], int)(_ + _)
+            val parser = combine(failing("e"): Parser[Int], int)(_ + _)
             parser.parse(tokenize("10 20 30")) shouldBe Failure("e")
         }
 
         "fail if the second parser fails" in {
-            val parser = combine(int, failing("e"): CommandParser[Int])(_ + _)
+            val parser = combine(int, failing("e"): Parser[Int])(_ + _)
             parser.parse(tokenize("10 20 30")) shouldBe Failure("e")
         }
 

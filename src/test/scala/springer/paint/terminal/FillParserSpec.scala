@@ -2,7 +2,6 @@ package springer.paint.terminal
 
 import springer.paint.dsl.Fill
 import springer.paint.point.Point
-import springer.paint.terminal.CommandParser.{Failure, Success}
 
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.
