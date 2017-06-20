@@ -59,7 +59,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             var currentState: DefaultPaintState = Initialised(CharCanvas.empty(4, 2))
 
             When("the user draws an horizontal line")
-            currentState = painter(currentState, HorizontalLine(1, 0, 2))
+            currentState = painter(currentState, HorizontalLine(2, 1, 3))
 
             Then("I should see an horizontal Line")
 
@@ -74,7 +74,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             var currentState: DefaultPaintState = Initialised(CharCanvas.empty(2, 4))
 
             When("the user draws an horizontal line")
-            currentState = painter(currentState, VerticalLine(1, 0, 2))
+            currentState = painter(currentState, VerticalLine(2, 1, 3))
 
             Then("I should see an horizontal Line")
 
@@ -89,7 +89,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             var currentState: DefaultPaintState = Initialised(CharCanvas.empty(5, 5))
 
             When("the user draws a rectangle")
-            currentState = painter(currentState, Rectangle(Point(1, 1), Point(3, 3)))
+            currentState = painter(currentState, Rectangle(Point(2, 2), Point(4, 4)))
 
             Then("I should see a rectangle")
 
@@ -104,10 +104,10 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             var currentState: DefaultPaintState = Initialised(CharCanvas.empty(5, 5))
 
             When("the user draws a line")
-            currentState = painter(currentState, VerticalLine(2, 0, 4))
+            currentState = painter(currentState, VerticalLine(3, 1, 5))
 
             When("the users bucket-fill from 0, 0")
-            currentState = painter(currentState, Fill(Point(0, 0), 'o'))
+            currentState = painter(currentState, Fill(Point(1, 1), 'o'))
 
             assertOutput(currentState, "oox  \noox  \noox  \noox  \noox  ")
         }

@@ -20,7 +20,7 @@ trait Canvas[In, Out] {
     ).filter(isPointInCanvas)
 
     def isPointInCanvas(p: Point): Boolean = {
-        p.x >= 0 && p.x < width && p.y >= 0 && p.y < height
+        p.x >= 1 && p.x <= width && p.y >= 1 && p.y <= height
     }
 }
 
@@ -33,13 +33,13 @@ case class CharCanvas(
     private val pixels: Vector[String]
 ) extends Canvas[Char, String] {
     /**
-      *
+      * Draw a point on a canvas
       */
     def drawPoint(position: Point, input: Char): Canvas[Char, String] = {
         if (isPointInCanvas(position)) {
-            var oldRow = pixels(position.y)
-            val newRow = oldRow.substring(0, position.x) + input + oldRow.substring(position.x + 1, width)
-            copy(pixels = pixels.updated(position.y, newRow))
+            var oldRow = pixels(position.y - 1)
+            val newRow = oldRow.substring(0, position.x - 1) + input + oldRow.substring(position.x, width)
+            copy(pixels = pixels.updated(position.y - 1, newRow))
         } else this
     }
 
@@ -49,7 +49,7 @@ case class CharCanvas(
 
     def valueAt(position: Point): Option[Char] =
         if (isPointInCanvas(position)) {
-            Some(pixels(position.y)(position.x))
+            Some(pixels(position.y - 1)(position.x - 1))
         } else None
 }
 
