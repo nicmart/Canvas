@@ -1,5 +1,8 @@
 package springer.paint.terminal
 
+import scala.util.Try
+import scala.util.{Success => TrySuccess, Failure => TryFailure}
+
 /**
   * The possible result of a parsing
   */
@@ -16,15 +19,20 @@ sealed trait ParserResult[+T] { self =>
 
     /**
       * Map a successful parser result into another result
+      * Wrap any exception into a failure
       */
     def mapSuccess[S](f: Success[T] => ParserResult[S]): ParserResult[S] =
         this match {
-            case success@Success(_, _) => f(success)
+            case success@Success(_, _) =>
+                Try(f(success)) match {
+                    case TrySuccess(s) => s
+                    case TryFailure(e) => Failure(e.getMessage)
+                }
             case failure@Failure(_) => failure
         }
 
     /**
-      * Map the parsed value in case of success
+      * Map the parsed value in case of success.
       */
     def map[S](f: T => S): ParserResult[S] = mapSuccess { success =>
         Success(f(success.value), success.tail)

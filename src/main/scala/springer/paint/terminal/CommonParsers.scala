@@ -21,16 +21,6 @@ object CommonParsers {
         _ => Failure(error)
 
     /**
-      * A parser that parses a single token
-      */
-    def single[T](token: String, parsed: T): Parser[T] =
-        (tokens: List[String]) => tokens match {
-            case head :: tail if head == token =>
-                Success(parsed, tail)
-            case _ => Failure(s"Token $token not found")
-        }
-
-    /**
       * Always parse the first token and return it
       */
     val first: Parser[String] =
@@ -40,41 +30,39 @@ object CommonParsers {
         }
 
     /**
+      * A parser that parses a single token
+      */
+    def single[T](token: String, parsed: T): Parser[T] =
+        first.filter(_ == token).map(_ => parsed)
+
+    /**
       * Parse the first token, expecting it to be a single char
       */
     var char: Parser[Char] =
         first
-            .filter(_.length == 1, "Expected a string of length 1")
-            .map(_.headOption.getOrElse(' '))
+            .filter(_.length == 1)
+            .map(_.head)
 
     /**
       * Parse an integer
       */
-    val int: Parser[Int] =
-        (tokens: List[String]) => tokens match {
-            case head :: tail =>
-                Try(head.toInt)
-                    .map(Success(_, tail))
-                    .getOrElse(Failure("Not a valid integer"))
-            case _ =>
-                Failure("No tokens found")
-        }
+    val int: Parser[Int] = first.map(_.toInt)
 
     /**
       * Parse a non-negative integer
       */
     val nonNegativeInt: Parser[Int] =
-        int.filter(_ >= 0, "Integer must be non-negative")
+        int.filter(_ >= 0)
 
     /**
       * Parse a positive integer
       */
     val positiveInt: Parser[Int] =
-        int.filter(_ > 0, "Integer must be positive")
+        int.filter(_ > 0)
 
     /**
       * Parse an integer in a range
       */
     def rangeInt(from: Int, to: Int): Parser[Int] =
-        int.filter(n => n >= from && n <= to, s"Integer must be between $from and $to")
+        int.filter(n => n >= from && n <= to)
 }

@@ -30,7 +30,7 @@ trait Parser[+T] { self =>
     def mapSuccess[S](f: Success[T] => ParserResult[S]): Parser[S] =
         (tokens: List[String]) => self.parse(tokens).mapSuccess(f)
 
-    def filter(predicate: T => Boolean, message: String): Parser[T] =
+    def filter(predicate: T => Boolean, message: String = ""): Parser[T] =
         mapSuccess { success => if (predicate(success.value)) success else Failure(message) }
 
     /**

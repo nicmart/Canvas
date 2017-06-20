@@ -19,6 +19,12 @@ class ParserResultSpec extends BaseParserSpec{
             mapped shouldBe Failure("123")
         }
 
+        "transform exceptions into failures when mapped" in {
+            val successful = Success(123)
+            val mapped = successful.mapSuccess(_ => throw new Exception("Hi"))
+            mapped shouldBe Failure("Hi")
+        }
+
         "apply the function passed to map to its value" in {
             val successful = Success(123)
             val mapped = successful.map(_ + 1)
