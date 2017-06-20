@@ -11,9 +11,15 @@ class ParserSpec extends BaseParserSpec {
             (failing("e") or successful("a")).parse(Nil) shouldBe Success("a", Nil)
             (failing("a") or failing("b")).parse(Nil) shouldBe Failure("b")
         }
+
         "be able to map successful parsed values with a function" in {
             successful("a").map(_ * 2).parse(Nil) shouldBe Success("aa", Nil)
             failing("e").map(_ => "b").parse(Nil) shouldBe Failure("e")
+        }
+
+        "be able to map failures with a function" in {
+            successful("a").mapFailure(_ => Success("b")).parse(Nil) shouldBe Success("a", Nil)
+            failing("e").mapFailure(_ => Success("b")).parse(Nil) shouldBe Success("b")
         }
     }
 
@@ -71,6 +77,15 @@ class ParserSpec extends BaseParserSpec {
             val parser = combine(int, failing("e"): Parser[Int])(_ + _)
             parser.parse(tokenize("10 20 30")) shouldBe Failure("e")
         }
+    }
 
+    "A labelled parser" should {
+        "give the label as failure message" in {
+            val parser = failing("error1").label("error2")
+            parser.parse(Nil) shouldBe Failure("error2")
+
+            val parser2 = successful("ok").label("error2")
+            parser2.parse(Nil) shouldBe Success("ok", Nil)
+        }
     }
 }

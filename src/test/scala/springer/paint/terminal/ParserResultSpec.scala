@@ -25,6 +25,12 @@ class ParserResultSpec extends BaseParserSpec{
             mapped shouldBe Failure("Hi")
         }
 
+        "remain unchanged when mapFailure is called" in {
+            val success = Success("e")
+            val mapped = success.mapFailure(_ => Success(123))
+            mapped shouldBe success
+        }
+
         "apply the function passed to map to its value" in {
             val successful = Success(123)
             val mapped = successful.map(_ + 1)
@@ -51,6 +57,12 @@ class ParserResultSpec extends BaseParserSpec{
             val failure: ParserResult[Int] = Failure("e")
             val mapped = failure.map(_ + 1)
             mapped shouldBe failure
+        }
+
+        "apply the function passed to mapFailure to itself" in {
+            val failure = Failure("e")
+            val mapped = failure.mapFailure(s => Failure(s.error * 2))
+            mapped shouldBe Failure("ee")
         }
     }
 }

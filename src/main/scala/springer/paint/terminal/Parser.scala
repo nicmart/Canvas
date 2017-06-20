@@ -12,24 +12,39 @@ trait Parser[+T] { self =>
     def parse(tokens: List[String]): ParserResult[T]
 
     /**
-      * Return a parser that in case of failure try to parse with fallbackParser
+      * Return a new parser whose successful result will be mapped through f
       */
-    def or[S >: T](fallbackParser: Parser[S]): Parser[S] =
-        (tokens: List[String]) => self.parse(tokens) or fallbackParser.parse(tokens)
+    def mapSuccess[S](f: Success[T] => ParserResult[S]): Parser[S] =
+        (tokens: List[String]) => self.parse(tokens).mapSuccess(f)
+
+    /**
+      * Return a new parses whose failures are mapped with f
+      */
+    def mapFailure[S >: T](f: Failure => ParserResult[S]): Parser[S] =
+        (tokens: List[String]) => self.parse(tokens).mapFailure[S](f)
 
     /**
       * Return a new parser that will return parsed values mapped with
       * the provided function
       */
     def map[S](f: T => S): Parser[S] =
-        (tokens: List[String]) => self.parse(tokens).map(f)
+        mapSuccess(success => Success(f(success.value), success.tail))
 
     /**
-      * Return a new parser whose successful result will be mapped through f
+      * Try this parser, and in case of failure try the other one
       */
-    def mapSuccess[S](f: Success[T] => ParserResult[S]): Parser[S] =
-        (tokens: List[String]) => self.parse(tokens).mapSuccess(f)
+    def or[S >: T](fallbackParser: Parser[S]): Parser[S] =
+        (tokens: List[String]) => self.parse(tokens) or fallbackParser.parse(tokens)
 
+    /**
+      * Change the error message of failures into {error}
+      */
+    def label(error: String): Parser[T] =
+        mapFailure(_ => Failure(error))
+
+    /**
+      * Make the parser fail if the parsed result does not match the predicate
+      */
     def filter(predicate: T => Boolean, message: String = ""): Parser[T] =
         mapSuccess { success => if (predicate(success.value)) success else Failure(message) }
 
@@ -64,6 +79,9 @@ object Parser {
         }
     }
 
+    /**
+      * Combine the result of two successful parsers
+      */
     def combine[T, S, U](
         parser1: Parser[T],
         parser2: Parser[S])(

@@ -44,7 +44,8 @@ case class CharCanvas(
     }
 
     def output: String =
-        pixels.map(line => line.toCharArray.mkString(" ")).mkString("\n")
+        pixels.mkString("\n")
+        //pixels.map(line => line.toCharArray.mkString(" ")).mkString("\n")
 
     def valueAt(position: Point): Option[Char] =
         if (isPointInCanvas(position)) {
