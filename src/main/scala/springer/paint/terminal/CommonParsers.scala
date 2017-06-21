@@ -30,10 +30,16 @@ object CommonParsers {
         }
 
     /**
+      * Match the first token
+      */
+    def matchFirst(token: String): Parser[String] =
+        first.filter(_ == token)
+
+    /**
       * A parser that parses a single token
       */
     def single[T](token: String, parsed: T): Parser[T] =
-        first.filter(_ == token).map(_ => parsed)
+        matchFirst(token).map(_ => parsed)
 
     /**
       * Parse the first token, expecting it to be a single char

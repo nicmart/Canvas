@@ -6,9 +6,6 @@ import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.terminal._
 import CommonParsers._
 
-/**
-  * Created by Nicolò Martini on 28/04/2017.
-  */
 trait Wiring {
     type PainterOutput = Canvas[Char, String]
     type DefaultPaintState = PaintState[Char, String]
