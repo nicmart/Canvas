@@ -1,14 +1,11 @@
 package springer.paint.dsl
 
+import springer.paint.canvas.CanvasDsl
 import springer.paint.point.Point
 
-/**
-  * The main DSL
-  */
-sealed trait PaintDsl
-
-final case class NewCanvas(width: Int, height: Int) extends PaintDsl
-final case class HorizontalLine(y: Int, from: Int, to: Int) extends PaintDsl
-final case class VerticalLine(x: Int, from: Int, to: Int) extends PaintDsl
-final case class Rectangle(upperLeft: Point, lowerRight: Point) extends PaintDsl
-final case class Fill(from: Point, input: Char) extends PaintDsl
+sealed trait PaintDsl[+In]
+final case class NewCanvas(width: Int, height: Int) extends PaintDsl[Nothing] {
+    assert(width > 0)
+    assert(height > 0)
+}
+final case class Draw[In](action: CanvasDsl[In]) extends PaintDsl[In]

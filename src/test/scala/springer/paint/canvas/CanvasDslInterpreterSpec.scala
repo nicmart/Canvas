@@ -15,7 +15,10 @@ class CanvasDslInterpreterSpec extends CommonSpec {
         }
 
         "Draw a sequence of points on a canvas" in {
-            val expr = DrawSequence(List(DrawPoint(Point(1, 1), 'x'), DrawPoint(Point(1, 2), 'o')))
+            val expr = DrawSequence(List(
+                DrawPoint(Point(1, 1), 'x'),
+                DrawPoint(Point(1, 2), 'o')
+            ))
             val canvas = interpreter.run(CharCanvas.empty(10, 10), expr)
             canvas.valueAt(Point(1, 1)) shouldBe Some('x')
             canvas.valueAt(Point(1, 2)) shouldBe Some('o')

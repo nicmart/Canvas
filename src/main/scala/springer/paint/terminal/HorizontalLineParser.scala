@@ -1,6 +1,6 @@
 package springer.paint.terminal
 
-import springer.paint.dsl.{HorizontalLine, PaintDsl, TerminalDsl}
+import springer.paint.dsl.HorizontalLine
 import Parser._
 import CommonParsers._
 

@@ -13,9 +13,9 @@ import scala.collection.immutable.Queue
 class CanvasPainter extends Painter[Char, String] {
 
     type State = PaintState[Char, String]
-    def apply(state: State, command: PaintDsl): State = command match {
+    def apply(state: State, command: PaintDslLegacy): State = command match {
 
-        case NewCanvas(width, height) =>
+        case NewCanvasLegacy(width, height) =>
             Initialised(CharCanvas.empty(width, height))
 
         case HorizontalLine(y, fromX, toX) =>
@@ -62,7 +62,7 @@ class CanvasPainter extends Painter[Char, String] {
       * Apply a sequence of commands to a state
       */
     @tailrec
-    private def sequence(state: State)(commands: PaintDsl*): State = {
+    private def sequence(state: State)(commands: PaintDslLegacy*): State = {
         if (commands.isEmpty) state
         else {
             sequence(apply(state, commands.head))(commands.tail: _*)

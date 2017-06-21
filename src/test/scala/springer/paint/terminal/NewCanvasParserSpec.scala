@@ -1,6 +1,6 @@
 package springer.paint.terminal
 
-import springer.paint.dsl.NewCanvas
+import springer.paint.dsl.NewCanvasLegacy
 
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.
@@ -10,7 +10,7 @@ class NewCanvasParserSpec extends BaseParserSpec {
 
         "parse a valid new canvas command" in {
             val tokens = tokenize("20 30")
-            NewCanvasParser.parse(tokens) shouldBe Success(NewCanvas(20, 30), Nil)
+            NewCanvasParser.parse(tokens) shouldBe Success(NewCanvasLegacy(20, 30), Nil)
         }
 
         "refuse non positive sizes" in {

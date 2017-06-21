@@ -25,7 +25,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             var currentState: DefaultPaintState = Uninitialised[Char, String]()
 
             When("the user creates a new canvas 20x10")
-            currentState = painter(currentState, NewCanvas(20, 10))
+            currentState = painter(currentState, NewCanvasLegacy(20, 10))
 
             Then("I should see an empty canvas of the correct size")
 
@@ -41,10 +41,10 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             var currentState: DefaultPaintState = Uninitialised[Char, String]()
 
             Given("the user has created a new canvas 20x10")
-            currentState = painter(currentState, NewCanvas(20, 10))
+            currentState = painter(currentState, NewCanvasLegacy(20, 10))
 
             When("the user creates a new canvas 10x10")
-            currentState = painter(currentState, NewCanvas(10, 10))
+            currentState = painter(currentState, NewCanvasLegacy(10, 10))
 
             Then("I should see an empty canvas of the correct size")
 

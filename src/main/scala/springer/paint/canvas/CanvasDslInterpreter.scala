@@ -15,9 +15,9 @@ class CanvasDslInterpreter[In, Out] {
     /**
       * Draw any CanvasDsl action
       */
-    def run(state: Canvas[In, Out], action: CanvasDsl[In]): Canvas[In, Out] =
+    def run(canvas: Canvas[In, Out], action: CanvasDsl[In]): Canvas[In, Out] =
         action match {
-            case pointAction @ DrawPoint(_, _) => drawPoint(state, pointAction)
-            case DrawSequence(actions) => actions.foldLeft(state)(run)
+            case pointAction @ DrawPoint(_, _) => drawPoint(canvas, pointAction)
+            case DrawSequence(actions) => actions.foldLeft(canvas)(run)
         }
 }
