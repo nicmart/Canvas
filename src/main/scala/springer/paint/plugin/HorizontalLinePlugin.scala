@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{CanvasDsl, DrawPoint, DrawSequence}
+import springer.paint.canvas.{Canvas, CanvasDsl, DrawPoint, DrawSequence}
 import springer.paint.point.Point
 import springer.paint.terminal.CommonParsers._
 import springer.paint.terminal.Parser._
@@ -21,7 +21,7 @@ object HorizontalLinePlugin extends Plugin[Char] {
     /**
       * Interpret the command into a CanvasDsl
       */
-    def interpret(line: Command): CanvasDsl[Char] = {
+    def interpret(line: Command, canvas: Canvas[Char, _]): CanvasDsl[Char] = {
         val actions = Plugin.range(line.fromX, line.toX).map {
             x => DrawPoint(Point(x, line.y), 'x')
         }

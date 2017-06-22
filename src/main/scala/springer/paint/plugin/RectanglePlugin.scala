@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{CanvasDsl, DrawSequence}
+import springer.paint.canvas.{Canvas, CanvasDsl, DrawSequence}
 import springer.paint.point.Point
 import springer.paint.terminal.CommonParsers.{int, single}
 import springer.paint.terminal.Parser
@@ -21,7 +21,7 @@ object RectanglePlugin extends Plugin[Char] {
     /**
       * Interpret the command into a CanvasDsl
       */
-    def interpret(rect: Rectangle): CanvasDsl[Char] = {
+    def interpret(rect: Rectangle, canvas: Canvas[Char, _]): CanvasDsl[Char] = {
         val Rectangle(Point(x1, y1), Point(x2, y2)) = rect
 
         // This is to allow any position of the two points
@@ -29,15 +29,15 @@ object RectanglePlugin extends Plugin[Char] {
         val (minY, maxY) = (Math.min(y1, y2), Math.max(y1, y2))
 
         val commands = if (minX == maxX) {
-            List(VerticalLinePlugin.interpret(VerticalLine(minX, minY, maxY)))
+            List(VerticalLinePlugin.interpret(VerticalLine(minX, minY, maxY), canvas))
         } else if (minY == maxY) {
-            List(HorizontalLinePlugin.interpret(HorizontalLine(minY, minX, maxX)))
+            List(HorizontalLinePlugin.interpret(HorizontalLine(minY, minX, maxX), canvas))
         } else {
             List(
-                HorizontalLinePlugin.interpret(HorizontalLine(minY, minX, maxX - 1)),
-                VerticalLinePlugin.interpret(VerticalLine(maxX, minY, maxY - 1)),
-                HorizontalLinePlugin.interpret(HorizontalLine(maxY, maxX, minX + 1)),
-                VerticalLinePlugin.interpret(VerticalLine(minX, maxY, minY + 1))
+                HorizontalLinePlugin.interpret(HorizontalLine(minY, minX, maxX - 1), canvas),
+                VerticalLinePlugin.interpret(VerticalLine(maxX, minY, maxY - 1), canvas),
+                HorizontalLinePlugin.interpret(HorizontalLine(maxY, maxX, minX + 1), canvas),
+                VerticalLinePlugin.interpret(VerticalLine(minX, maxY, minY + 1), canvas)
             )
         }
         DrawSequence(commands)

@@ -5,7 +5,7 @@ import springer.paint.point.Point
 /**
   * Low-level Canvas Type. Provide only drawPoint primitive.
   */
-trait Canvas[In, Out] {
+trait Canvas[In, +Out] {
     def width: Int
     def height: Int
     def drawPoint(position: Point, input: In): Canvas[In, Out]
@@ -22,6 +22,15 @@ trait Canvas[In, Out] {
     def isPointInCanvas(p: Point): Boolean = {
         p.x >= 1 && p.x <= width && p.y >= 1 && p.y <= height
     }
+
+    /**
+      * Draw any CanvasDsl action
+      */
+    def run(action: CanvasDsl[In]): Canvas[In, Out] =
+        action match {
+            case DrawPoint(point, in) => drawPoint(point, in)
+            case DrawSequence(actions) => actions.foldLeft(this)(_.run(_))
+        }
 }
 
 /**

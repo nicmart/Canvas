@@ -1,5 +1,6 @@
 package springer.paint.painter
 
+import springer.paint.canvas.Canvas
 import springer.paint.dsl.{PaintDsl, PaintDslInterpreter}
 import springer.paint.dsl.parser.NewCanvasParser
 import springer.paint.plugin.Plugin
@@ -13,9 +14,9 @@ final case class NewPainter[In, Out](
     /**
       * An OR between all plugin parsers
       */
-    val parser =
-        plugins.foldLeft(NewCanvasParser: Parser[PaintDsl[In]]){
-            (parser, plugin) => parser or plugin.parser
+    def parser(canvas: Canvas[In, Out]) =
+        plugins.foldLeft(NewCanvasParser: Parser[PaintDsl[In]]) {
+            (parser, plugin) => parser or plugin.parser(canvas)
         }
 
     def run(state: PaintState[In, Out], input: String): PaintState[In, Out] =

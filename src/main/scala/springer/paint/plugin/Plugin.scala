@@ -1,7 +1,8 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.CanvasDsl
+import springer.paint.canvas.{Canvas, CanvasDsl}
 import springer.paint.dsl.{Draw, PaintDsl}
+import springer.paint.state.{Initialised, PaintState}
 import springer.paint.terminal.Parser
 
 /**
@@ -23,7 +24,7 @@ trait Plugin[In] {
     /**
       * Interpret the command into a CanvasDsl
       */
-    def interpret(command: Command): CanvasDsl[In]
+    def interpret[Out](command: Command, state: PaintState[In, Out]): PaintState[In, Out]
 
     /**
       * Parse an user input into this command
@@ -31,10 +32,26 @@ trait Plugin[In] {
     def commandParser: Parser[Command]
 
     /**
-      * Parse user input and translate it to de-sugared CanvasDsl
+      * Parse user input and translate to a new state
       */
-    def parser: Parser[PaintDsl[In]] =
-        commandParser.map(interpret).map(Draw(_))
+    def parser[Out](state: PaintState[In, Out]): Parser[PaintState[In, Out]] =
+        commandParser.map(interpret(_, state))
+}
+
+trait StateFreePlugin[In] extends Plugin[In] {
+    def toCanvasDsl(command: Command): CanvasDsl[In]
+
+    override def interpret[Out](
+        command: Command,
+        state: PaintState[In, Out]
+    ): Either[String, PaintState[In, Out]] = {
+        state match {
+            case Initialised(canvas) =>
+                Right(Initialised(canvas.run(toCanvasDsl(command))))
+            case _ =>
+                Left("You need a canvas to run this command")
+        }
+    }
 }
 
 object Plugin {
