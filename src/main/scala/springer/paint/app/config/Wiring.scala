@@ -7,7 +7,7 @@ import springer.paint.terminal._
 import CommonParsers._
 import springer.paint.dsl.PaintDslInterpreter
 import springer.paint.painter
-import springer.paint.plugin.HorizontalLinePlugin
+import springer.paint.plugin.{HorizontalLinePlugin, VerticalLinePlugin}
 
 trait Wiring {
     type PainterOutput = Canvas[Char, String]
@@ -16,7 +16,8 @@ trait Wiring {
     lazy val initialState = Uninitialised[Char, String]()
     lazy val painterOld = new CanvasPainter
     lazy val plugins = List(
-        HorizontalLinePlugin
+        HorizontalLinePlugin,
+        VerticalLinePlugin
     )
     lazy val canvasDslInterpreter = new CanvasDslInterpreter[Char, String]
     lazy val paintDslInterpreter = new PaintDslInterpreter[Char, String](canvasDslInterpreter, CharCanvas.empty)

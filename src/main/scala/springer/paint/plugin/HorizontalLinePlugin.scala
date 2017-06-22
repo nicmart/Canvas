@@ -11,7 +11,7 @@ import springer.paint.terminal.{Failure, Parser, Success}
   */
 object HorizontalLinePlugin extends Plugin[Char] {
 
-    case class HorizontalLine(y: Int, fromX: Int, toX: Int)
+    final case class HorizontalLine(y: Int, fromX: Int, toX: Int)
 
     /**
       * The type of the new Command

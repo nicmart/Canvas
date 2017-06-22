@@ -12,7 +12,7 @@ import springer.paint.terminal.Parser._
   */
 object VerticalLinePlugin extends Plugin[Char] {
 
-    case class VerticalLine(x: Int, fromY: Int, toY: Int)
+    final case class VerticalLine(x: Int, fromY: Int, toY: Int)
 
     /**
       * The type of the new Command
