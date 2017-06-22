@@ -1,7 +1,7 @@
 package springer.paint.app.config
 
 import springer.paint.canvas.{Canvas, CanvasDslInterpreter, CharCanvas}
-import springer.paint.painter.{CanvasPainter, NewPainter}
+import springer.paint.painter.{CanvasPainter, NewPainter, Painter}
 import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.terminal._
 import CommonParsers._
@@ -12,7 +12,7 @@ import springer.paint.plugin.HorizontalLinePlugin
 trait Wiring {
     type PainterOutput = Canvas[Char, String]
     type DefaultPaintState = PaintState[Char, String]
-    //type DefaultPainter = Painter[Char, String]
+    type DefaultPainter = Painter[Char, String]
     lazy val initialState = Uninitialised[Char, String]()
     lazy val painterOld = new CanvasPainter
     lazy val plugins = List(
