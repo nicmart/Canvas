@@ -3,7 +3,7 @@ package springer.paint.spec
 import org.scalatest.{FeatureSpec, GivenWhenThen, Inside, Matchers}
 import springer.paint.canvas.CharCanvas
 import springer.paint.dsl._
-import springer.paint.painter.{CanvasPainter, Painter}
+import springer.paint.painter.{CanvasPainter, NewPainter}
 import springer.paint.point.Point
 import springer.paint.state.{Initialised, PaintState, Uninitialised}
 

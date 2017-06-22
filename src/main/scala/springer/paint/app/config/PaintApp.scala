@@ -15,16 +15,7 @@ object PaintApp extends App {
 
     while (true) {
         val line = StdIn.readLine("Enter command: ")
-        val tokens = line.split(" ").toList
-        parser.parse(tokens) match {
-            case Success(command, Nil) =>
-                state = painter(state, command)
-                state.mapCanvas { canvas =>
-                    println(canvas.output)
-                    canvas
-                }
-            case Success(command, _) => println("Too many characters in the command!")
-            case Failure(error) => println(error)
-        }
+        state = painter.run(state, line)
+        state.mapCanvas(c => { println(c.output); c})
     }
 }

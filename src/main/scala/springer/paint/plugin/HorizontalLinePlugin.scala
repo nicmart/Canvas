@@ -31,7 +31,7 @@ object HorizontalLinePlugin extends Plugin[Char] {
     /**
       * Parse an user input into this command
       */
-    def parser: Parser[Command] = {
+    def commandParser: Parser[Command] = {
         val intParser = times(int, 4).mapSuccess { success =>
             success.value match {
                 case x1 :: y1 :: x2 :: y2 :: tail if y1 == y2 =>

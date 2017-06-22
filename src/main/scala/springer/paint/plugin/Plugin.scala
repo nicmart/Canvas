@@ -1,6 +1,7 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.CanvasDsl
+import springer.paint.dsl.{Draw, PaintDsl}
 import springer.paint.terminal.Parser
 
 /**
@@ -27,13 +28,13 @@ trait Plugin[In] {
     /**
       * Parse an user input into this command
       */
-    def parser: Parser[Command]
+    def commandParser: Parser[Command]
 
     /**
       * Parse user input and translate it to de-sugared CanvasDsl
       */
-    def canvasParser: Parser[CanvasDsl[In]] =
-        parser.map(interpret)
+    def parser: Parser[PaintDsl[In]] =
+        commandParser.map(interpret).map(Draw(_))
 }
 
 object Plugin {
