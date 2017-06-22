@@ -11,7 +11,7 @@ import springer.paint.terminal.{Failure, Parser, Success}
   */
 object HorizontalLinePlugin extends Plugin[Char] {
 
-    case class HorizontalLine(y: Int, from: Int, to: Int)
+    case class HorizontalLine(y: Int, fromX: Int, toX: Int)
 
     /**
       * The type of the new Command
@@ -22,7 +22,7 @@ object HorizontalLinePlugin extends Plugin[Char] {
       * Interpret the command into a CanvasDsl
       */
     def interpret(line: Command): CanvasDsl[Char] = {
-        val actions = Plugin.range(line.from, line.to).map {
+        val actions = Plugin.range(line.fromX, line.toX).map {
             x => DrawPoint(Point(x, line.y), 'x')
         }
         DrawSequence(actions.toList)
