@@ -3,9 +3,9 @@ package springer.paint.plugin
 import springer.paint.canvas.{CharCanvas, DrawPoint, DrawSequence}
 import springer.paint.plugin.VerticalLinePlugin.VerticalLine
 import springer.paint.point.Point
-import springer.paint.terminal.{Failure, ParserSpec, Success}
+import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 
-class VerticalLinePluginSpec extends ParserSpec{
+class VerticalLinePluginSpec extends BaseParserSpec {
     val plugin = VerticalLinePlugin
 
     "The parser of the vertical line plugin" should {
@@ -39,7 +39,7 @@ class VerticalLinePluginSpec extends ParserSpec{
     }
 
     "The interpreter of an vertical plugin" should {
-        val interpreter = plugin.interpret _
+        val interpreter = plugin.toCanvasDsl _
         val canvas = CharCanvas.empty(30, 10)
         "draw an vertical line as a sequence of points" in {
             val command = VerticalLine(1, 1, 2)
@@ -47,7 +47,7 @@ class VerticalLinePluginSpec extends ParserSpec{
                 DrawPoint(Point(1, 1), 'x'),
                 DrawPoint(Point(1, 2), 'x')
             ))
-            interpreter(command, canvas) shouldBe expected
+            interpreter(command) shouldBe expected
         }
     }
 }

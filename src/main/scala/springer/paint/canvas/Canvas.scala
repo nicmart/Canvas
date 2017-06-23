@@ -46,15 +46,17 @@ case class CharCanvas(
       */
     def drawPoint(position: Point, input: Char): Canvas[Char, String] = {
         if (isPointInCanvas(position)) {
-            var oldRow = pixels(position.y - 1)
+            val oldRow = pixels(position.y - 1)
             val newRow = oldRow.substring(0, position.x - 1) + input + oldRow.substring(position.x, width)
             copy(pixels = pixels.updated(position.y - 1, newRow))
         } else this
     }
 
-    def output: String =
+    def output: String = {
+//        val line = "-" * (width + 2)
+//        (line +:  pixels.map("|" + _ + "|") :+ line).mkString("\n")
         pixels.mkString("\n")
-        //pixels.map(line => line.toCharArray.mkString(" ")).mkString("\n")
+    }
 
     def valueAt(position: Point): Option[Char] =
         if (isPointInCanvas(position)) {

@@ -1,22 +1,29 @@
 package springer.paint.plugin
 
 import springer.paint.plugin.FillPlugin.Fill
+import springer.paint.plugin.NewCanvasPlugin.NewCanvas
 import springer.paint.point.Point
-import springer.paint.spec.CommonSpec
 import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 
-class FillPluginSpec extends BaseParserSpec {
-    val plugin = FillPlugin
-    "The parser of the fill plugin" should {
+class NewCanvasPluginSpec extends BaseParserSpec {
+    val plugin = NewCanvasPlugin
+    "The parser of the new canvas plugin" should {
         val parser = plugin.commandParser
-        "parse valid horizontal line commands" in {
-            val tokens = tokenize("B 0 0 x")
-            val expectedCommand = Fill(Point(0, 0), 'x')
+        "parse valid commands" in {
+            val tokens = tokenize("C 10 1")
+            val expectedCommand = NewCanvas(10, 1)
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
 
-        "refuse non-integers values" in {
-            val tokens = tokenize("B 0 10 0x")
+        "refuse non-positive widths" in {
+            val tokens = tokenize("C 0 10")
+            inside(parser.parse(tokens)) {
+                case Failure(_) =>
+            }
+        }
+
+        "refuse non-positive heights" in {
+            val tokens = tokenize("C 10 0")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }

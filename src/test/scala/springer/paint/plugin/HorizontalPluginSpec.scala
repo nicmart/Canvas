@@ -1,11 +1,11 @@
 package springer.paint.plugin
 
-import springer.paint.terminal.{Failure, ParserSpec, Success}
+import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 import HorizontalLinePlugin.HorizontalLine
 import springer.paint.canvas.{CharCanvas, DrawPoint, DrawSequence}
 import springer.paint.point.Point
 
-class HorizontalPluginSpec extends ParserSpec{
+class HorizontalPluginSpec extends BaseParserSpec {
     val plugin = HorizontalLinePlugin
 
     "The parser of the horizontal plugin" should {
@@ -37,7 +37,7 @@ class HorizontalPluginSpec extends ParserSpec{
     }
 
     "The interpreter of an horizontal plugin" should {
-        val interpreter = plugin.interpret _
+        val interpreter = plugin.toCanvasDsl _
         val canvas = CharCanvas.empty(30, 10)
         "draw an horizontal line as a sequence of points" in {
             val command = HorizontalLine(1, 1, 2)
@@ -45,7 +45,7 @@ class HorizontalPluginSpec extends ParserSpec{
                 DrawPoint(Point(1, 1), 'x'),
                 DrawPoint(Point(2, 1), 'x')
             ))
-            interpreter(command, canvas) shouldBe expected
+            interpreter(command) shouldBe expected
         }
     }
 }

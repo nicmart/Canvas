@@ -1,8 +1,7 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.{Canvas => PaintCanvas, CanvasDsl}
-import springer.paint.dsl.{Draw, PaintDsl}
-import springer.paint.state.{Initialised, PaintState}
+import springer.paint.state.PaintState
 import springer.paint.terminal.Parser
 
 /**

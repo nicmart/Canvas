@@ -1,13 +1,11 @@
 package springer.paint.painter
 
-import springer.paint.canvas.Canvas
-import springer.paint.dsl.{PaintDsl, PaintDslInterpreter}
 import springer.paint.plugin.Plugin
 import springer.paint.state.PaintState
 import springer.paint.terminal.{Failure, Parser, Success}
 import springer.paint.terminal.CommonParsers.failing
 
-final case class NewPainter[In, Out](
+final case class Painter[In, Out](
     plugins: List[Plugin[In, Out]]
 ) {
     type StateTransition = PaintState[In, Out] => PaintState[In, Out]
