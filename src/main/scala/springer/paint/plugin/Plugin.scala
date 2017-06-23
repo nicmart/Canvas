@@ -21,6 +21,9 @@ trait Plugin[In] {
       */
     type Command
 
+    type State[Out] = PaintState[In, Out]
+    type StateTransition[Out] = State[Out] => State[Out]
+
     /**
       * Interpret the command into a CanvasDsl
       */
@@ -34,8 +37,8 @@ trait Plugin[In] {
     /**
       * Parse user input and translate to a new state
       */
-    def parser[Out](state: PaintState[In, Out]): Parser[PaintState[In, Out]] =
-        commandParser.map(interpret(_, state))
+    def parser[Out]: Parser[PaintState[In, Out] => PaintState[In, Out]] =
+        commandParser.map(command => interpret[Out](command, _))
 }
 
 trait StateFreePlugin[In] extends Plugin[In] {
@@ -44,12 +47,26 @@ trait StateFreePlugin[In] extends Plugin[In] {
     override def interpret[Out](
         command: Command,
         state: PaintState[In, Out]
-    ): Either[String, PaintState[In, Out]] = {
-        state match {
-            case Initialised(canvas) =>
-                Right(Initialised(canvas.run(toCanvasDsl(command))))
-            case _ =>
-                Left("You need a canvas to run this command")
+    ): PaintState[In, Out] = {
+        if (state.isInitialised) {
+            state.mapCanvas(_.run(toCanvasDsl(command)))
+        } else {
+            state.addMessage("Please create a canvas before running this command")
+        }
+    }
+}
+
+trait CanvasSensitivePlugin[In] extends Plugin[In] {
+    def toCanvasTransition[Out](command: Command, canvas: Canvas[In, Out]): Canvas[In, Out]
+
+    override def interpret[Out](
+        command: Command,
+        state: PaintState[In, Out]
+    ): PaintState[In, Out] = {
+        if (state.isInitialised) {
+            state.mapCanvas(canvas => toCanvasTransition(command, canvas))
+        } else {
+            state.addMessage("Please create a canvas before running this command")
         }
     }
 }
