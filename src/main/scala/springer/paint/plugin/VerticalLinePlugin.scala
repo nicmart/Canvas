@@ -10,7 +10,7 @@ import springer.paint.terminal.Parser._
 /**
   * Draw vertical lines
   */
-object VerticalLinePlugin extends Plugin[Char] {
+object VerticalLinePlugin extends StateFreePlugin[Char, String] {
 
     final case class VerticalLine(x: Int, fromY: Int, toY: Int)
 
@@ -20,28 +20,28 @@ object VerticalLinePlugin extends Plugin[Char] {
     type Command = VerticalLine
 
     /**
-      * Interpret the command into a CanvasDsl
+      * Interpret a Vertical Line as a CanvasDsl expression
       */
-    def interpret(line: Command, canvas: Canvas[Char, _]): CanvasDsl[Char] = {
+    override def toCanvasDsl(line: VerticalLine): CanvasDsl[Char] = {
         val actions = Plugin.range(line.fromY, line.toY).map {
             y => DrawPoint(Point(line.x, y), 'x')
         }
         DrawSequence(actions.toList)
     }
 
-        /**
-          * Parse an user input into this command
-          */
-        def commandParser: Parser[Command] = {
-            val intParser = times(int, 4).mapSuccess { success =>
-                success.value match {
-                    case x1 :: y1 :: x2 :: y2 :: tail if x1 == x2 =>
-                    Success(VerticalLine(x1, y1, y2), success.tail)
-                    case _ =>
-                    Failure("Line not valid")
-                }
+    /**
+      * Parse an user input into this command
+      */
+    def commandParser: Parser[Command] = {
+        val intParser = times(int, 4).mapSuccess { success =>
+            success.value match {
+                case x1 :: y1 :: x2 :: y2 :: tail if x1 == x2 =>
+                Success(VerticalLine(x1, y1, y2), success.tail)
+                case _ =>
+                Failure("Line not valid")
             }
-
-            single("L", intParser).flatten()
         }
+
+        single("L", intParser).flatten()
+    }
 }

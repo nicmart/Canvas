@@ -1,10 +1,13 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{Canvas, CanvasDsl}
 import springer.paint.point.Point
+import springer.paint.terminal.CommonParsers.{char, int, single}
 import springer.paint.terminal.Parser
+import springer.paint.terminal.Parser.combine
 
-object FillPlugin extends Plugin[Char] {
+import scala.collection.immutable.Queue
+
+object FillPlugin extends CanvasSensitivePlugin[Char, String] {
 
     final case class Fill(from: Point, input: Char)
 
@@ -14,12 +17,36 @@ object FillPlugin extends Plugin[Char] {
     type Command = Fill
 
     /**
-      * Interpret the command into a CanvasDsl
+      * Canvas transition for this command
       */
-    def interpret(command: Fill, canvas: Canvas[Char, _]): CanvasDsl[Char] = ???
+    def toCanvasTransition(command: Fill, canvas: Canvas): Canvas = {
+        val Fill(from, value) = command
+        canvas.valueAt(from) match {
+            case None => canvas
+            case Some(color) =>
+                var newCanvas = canvas
+                var queue: Queue[Point] = Queue.empty.enqueue(from)
+                while (queue.nonEmpty) {
+                    val (point, dequeued) = queue.dequeue
+                    if (newCanvas.valueAt(point).contains(color)) {
+                        newCanvas = newCanvas.drawPoint(point, value)
+                        queue = dequeued.enqueue(newCanvas.neighboursOf(point).filter { point =>
+                            newCanvas.valueAt(point).contains(color)
+                        })
+                    } else {
+                        queue = dequeued
+                    }
+                }
+                newCanvas
+        }
+    }
 
     /**
       * Parse an user input into this command
       */
-    def commandParser: Parser[Fill] = ???
+    def commandParser: Parser[Fill] = {
+        val pointParser = combine(int, int)(Point)
+        val fillParser = combine(pointParser, char)(Fill)
+        single("B", fillParser).flatten()
+    }
 }

@@ -11,7 +11,6 @@ object PaintApp extends App {
 
     var state: Wiring.DefaultPaintState = Wiring.initialState
     val painter = Wiring.painter
-    val parser = Wiring.parser
 
     while (true) {
         val line = StdIn.readLine("Enter command: ")

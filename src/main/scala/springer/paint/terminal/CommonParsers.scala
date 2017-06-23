@@ -17,7 +17,7 @@ object CommonParsers {
     /**
       * An always-failing parser
       */
-    def failing(error: String): Parser[Nothing] =
+    def failing(error: String = ""): Parser[Nothing] =
         _ => Failure(error)
 
     /**

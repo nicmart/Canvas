@@ -6,7 +6,7 @@ import springer.paint.terminal.CommonParsers.{int, single}
 import springer.paint.terminal.Parser
 import springer.paint.terminal.Parser.times
 
-object RectanglePlugin extends Plugin[Char] {
+object RectanglePlugin extends StateFreePlugin[Char, String] {
 
     import HorizontalLinePlugin.HorizontalLine
     import VerticalLinePlugin.VerticalLine
@@ -18,10 +18,8 @@ object RectanglePlugin extends Plugin[Char] {
       */
     type Command = Rectangle
 
-    /**
-      * Interpret the command into a CanvasDsl
-      */
-    def interpret(rect: Rectangle, canvas: Canvas[Char, _]): CanvasDsl[Char] = {
+
+    def toCanvasDsl(rect: Rectangle): CanvasDsl[Char] = {
         val Rectangle(Point(x1, y1), Point(x2, y2)) = rect
 
         // This is to allow any position of the two points
@@ -29,15 +27,15 @@ object RectanglePlugin extends Plugin[Char] {
         val (minY, maxY) = (Math.min(y1, y2), Math.max(y1, y2))
 
         val commands = if (minX == maxX) {
-            List(VerticalLinePlugin.interpret(VerticalLine(minX, minY, maxY), canvas))
+            List(VerticalLinePlugin.toCanvasDsl(VerticalLine(minX, minY, maxY)))
         } else if (minY == maxY) {
-            List(HorizontalLinePlugin.interpret(HorizontalLine(minY, minX, maxX), canvas))
+            List(HorizontalLinePlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX)))
         } else {
             List(
-                HorizontalLinePlugin.interpret(HorizontalLine(minY, minX, maxX - 1), canvas),
-                VerticalLinePlugin.interpret(VerticalLine(maxX, minY, maxY - 1), canvas),
-                HorizontalLinePlugin.interpret(HorizontalLine(maxY, maxX, minX + 1), canvas),
-                VerticalLinePlugin.interpret(VerticalLine(minX, maxY, minY + 1), canvas)
+                HorizontalLinePlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX - 1)),
+                VerticalLinePlugin.toCanvasDsl(VerticalLine(maxX, minY, maxY - 1)),
+                HorizontalLinePlugin.toCanvasDsl(HorizontalLine(maxY, maxX, minX + 1)),
+                VerticalLinePlugin.toCanvasDsl(VerticalLine(minX, maxY, minY + 1))
             )
         }
         DrawSequence(commands)
