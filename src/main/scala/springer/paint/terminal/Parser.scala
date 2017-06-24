@@ -6,6 +6,7 @@ package springer.paint.terminal
   * a parser whose return value is a Paint Command.
   */
 trait Parser[+T] { self =>
+    import Parser._
     /**
       * Transform a list of token into a command parser result
       */
@@ -35,6 +36,13 @@ trait Parser[+T] { self =>
       */
     def or[S >: T](fallbackParser: Parser[S]): Parser[S] =
         (tokens: List[String]) => self.parse(tokens) or fallbackParser.parse(tokens)
+
+    /**
+      * Apply this parser, and then, depending on its result,
+      * generate a second one that will parse the rest of the tokens
+      */
+    def andThen[S](f: T => Parser[S]): Parser[S] =
+        mapSuccess { case Success(t, tail) => f(t).parse(tail) }
 
     /**
       * Change the error message of failures into {error}
@@ -91,4 +99,10 @@ object Parser {
             parser2.parse(success.tail).map(f(success.value, _))
         }
     }
+
+    /**
+      * Apply two parsers in sequence, and get the result as a pair
+      */
+    def pair[T, S](parser1: Parser[T], parser2: Parser[S]): Parser[(T, S)] =
+        combine(parser1, parser2)((_, _))
 }

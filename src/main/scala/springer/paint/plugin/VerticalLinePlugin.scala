@@ -10,7 +10,7 @@ import springer.paint.terminal.Parser._
 /**
   * Draw vertical lines
   */
-object VerticalLinePlugin extends StateFreePlugin[Char, String] {
+object VerticalLinePlugin extends CanvasFreePlugin[Char, String] {
 
     final case class VerticalLine(x: Int, fromY: Int, toY: Int)
 
@@ -33,15 +33,9 @@ object VerticalLinePlugin extends StateFreePlugin[Char, String] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Command] = {
-        val intParser = times(int, 4).mapSuccess { success =>
-            success.value match {
-                case x1 :: y1 :: x2 :: y2 :: tail if x1 == x2 =>
-                Success(VerticalLine(x1, y1, y2), success.tail)
-                case _ =>
-                Failure("Line not valid")
-            }
+        pair(point, point).map {
+            case (Point(x1, y1), Point(x2, y2)) if x1 == x2 =>
+                VerticalLine(x1, y1, y2)
         }
-
-        single("L", intParser).flatten()
     }
 }

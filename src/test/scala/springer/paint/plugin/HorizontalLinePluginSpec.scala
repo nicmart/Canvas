@@ -5,31 +5,31 @@ import HorizontalLinePlugin.HorizontalLine
 import springer.paint.canvas.{CharCanvas, DrawPoint, DrawSequence}
 import springer.paint.point.Point
 
-class HorizontalPluginSpec extends BaseParserSpec {
+class HorizontalLinePluginSpec extends BasePluginSpec {
     val plugin = HorizontalLinePlugin
 
     "The parser of the horizontal plugin" should {
         val parser = plugin.commandParser
         "parse valid horizontal line commands" in {
-            val tokens = tokenize("L 0 0 10 0")
+            val tokens = tokenize("0 0 10 0")
             val expectedCommand = HorizontalLine(0, 0, 10)
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
         "refuse non horizontal line commands" in {
-            val tokens = tokenize("L 0 1 10 0")
+            val tokens = tokenize("0 1 10 0")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
         }
         "refuse non-integers values" in {
-            val tokens = tokenize("L 0 0 10 0x")
+            val tokens = tokenize("0 0 10 0x")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
         }
 
         "refuse other malformed commands" in {
-            val tokens = tokenize("10 20 30")
+            val tokens = tokenize("asd 20 30")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }

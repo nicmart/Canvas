@@ -36,8 +36,8 @@ sealed trait PaintState[In, Out] {
     }
 }
 
-case class Uninitialised[In, Out]() extends PaintState[In, Out]
-case class Initialised[In, Out](canvas: Canvas[In, Out]) extends PaintState[In, Out]
-case class Final[In, Out]() extends PaintState[In, Out]
+final case class Uninitialised[In, Out]() extends PaintState[In, Out]
+final case class Initialised[In, Out](canvas: Canvas[In, Out]) extends PaintState[In, Out]
+final case class Final[In, Out]() extends PaintState[In, Out]
 
 

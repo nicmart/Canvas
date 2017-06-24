@@ -7,32 +7,32 @@ import springer.paint.point.Point
 import springer.paint.state.{Initialised, Uninitialised}
 import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 
-class NewCanvasPluginSpec extends BaseParserSpec {
+class NewCanvasPluginSpec extends BasePluginSpec {
     val plugin = NewCanvasPlugin
     "The parser of the new canvas plugin" should {
         val parser = plugin.commandParser
         "parse valid commands" in {
-            val tokens = tokenize("C 10 1")
+            val tokens = tokenize("10 1")
             val expectedCommand = NewCanvas(10, 1)
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
 
         "refuse non-positive widths" in {
-            val tokens = tokenize("C 0 10")
+            val tokens = tokenize("0 10")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
         }
 
         "refuse non-positive heights" in {
-            val tokens = tokenize("C 10 0")
+            val tokens = tokenize("10 0")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
         }
 
         "refuse other malformed commands" in {
-            val tokens = tokenize("10 20 30")
+            val tokens = tokenize("asd 20 30")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }

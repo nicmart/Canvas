@@ -1,5 +1,8 @@
 package springer.paint.terminal
 
+import springer.paint.point.Point
+import springer.paint.terminal.Parser.combine
+
 import scala.util.Try
 
 /**
@@ -71,4 +74,7 @@ object CommonParsers {
       */
     def rangeInt(from: Int, to: Int): Parser[Int] =
         int.filter(n => n >= from && n <= to)
+
+    def point: Parser[Point] =
+        combine(int, int)(Point)
 }

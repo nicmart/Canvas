@@ -9,15 +9,13 @@ trait Wiring {
     type PainterOutput = Canvas[Char, String]
     type DefaultPaintState = PaintState[Char, String]
     lazy val initialState = Uninitialised[Char, String]()
-    lazy val plugins = List[Plugin[Char, String]](
-        NewCanvasPlugin,
-        HorizontalLinePlugin,
-        VerticalLinePlugin,
-        RectanglePlugin,
-        FillPlugin,
-        QuitPlugin()
-    )
-    lazy val painter = Painter[Char, String](plugins)
+    lazy val painter = Painter[Char, String](Map.empty)
+        .addPlugin("C", NewCanvasPlugin, "Create New Canvas")
+        .addPlugin("L", HorizontalLinePlugin, "Horizontal Line Plugin")
+        .addPlugin("L", VerticalLinePlugin, "Vertical Line Plugin")
+        .addPlugin("R", RectanglePlugin, "Rectangle Plugin")
+        .addPlugin("B", FillPlugin, "Fill Plugin")
+        .addPlugin("Q", QuitPlugin(), "Quit Plugin")
 }
 
 object Wiring extends Wiring

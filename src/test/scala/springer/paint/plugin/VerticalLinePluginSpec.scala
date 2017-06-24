@@ -3,28 +3,28 @@ package springer.paint.plugin
 import springer.paint.canvas.{CharCanvas, DrawPoint, DrawSequence}
 import springer.paint.plugin.VerticalLinePlugin.VerticalLine
 import springer.paint.point.Point
-import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
+import springer.paint.terminal.{BaseParserSpec, Failure, Success}
 
-class VerticalLinePluginSpec extends BaseParserSpec {
+class VerticalLinePluginSpec extends BasePluginSpec {
     val plugin = VerticalLinePlugin
 
     "The parser of the vertical line plugin" should {
         val parser = plugin.commandParser
         "parse valid vertical line commands" in {
-            val tokens = tokenize("L 0 0 0 10")
+            val tokens = tokenize("0 0 0 10")
             val expectedCommand = VerticalLine(0, 0, 10)
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
 
         "refuse non vertical line commands" in {
-            val tokens = tokenize("L 0 0 10 0")
+            val tokens = tokenize("0 0 10 0")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
         }
 
         "refuse non-integers values" in {
-            val tokens = tokenize("L 0 0 10 0x")
+            val tokens = tokenize("0 0 10 0x")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }

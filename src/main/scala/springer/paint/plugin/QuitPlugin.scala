@@ -23,5 +23,5 @@ final case class QuitPlugin[In, Out]() extends Plugin[In, Out] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Quit.type] =
-        single("Q", Quit)
+        successful(Quit)
 }

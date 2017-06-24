@@ -6,17 +6,39 @@ import springer.paint.point.Point
   * Low-level Canvas Type. Provide only drawPoint primitive.
   */
 trait Canvas[In, +Out] {
+    /**
+      * Canvas width
+      */
     def width: Int
+
+    /**
+      * Canvas height
+      */
     def height: Int
+
+    /**
+      * Draw a point on the canvas
+      */
     def drawPoint(position: Point, input: In): Canvas[In, Out]
+
+    /**
+      * Get the output of the canvas
+      */
     def output: Out
+
+    /**
+      * Get the value of a pixel on the canvas
+      */
     def valueAt(position: Point): Option[In]
 
-    def neighboursOf(position: Point): List[Point] = List(
-        position + Point(0, 1),
-        position + Point(1, 0),
-        position + Point(0, -1),
-        position + Point(-1, 0)
+    /**
+      * Get the neighbours of a point
+      */
+    def neighboursOf(point: Point): List[Point] = List(
+        point + Point(0, 1),
+        point + Point(1, 0),
+        point + Point(0, -1),
+        point + Point(-1, 0)
     ).filter(isPointInCanvas)
 
     def isPointInCanvas(p: Point): Boolean = {

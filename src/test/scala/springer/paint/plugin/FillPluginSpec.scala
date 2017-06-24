@@ -5,25 +5,25 @@ import springer.paint.plugin.FillPlugin.Fill
 import springer.paint.point.Point
 import springer.paint.terminal.{BaseParserSpec, Failure, Success}
 
-class FillPluginSpec extends BaseParserSpec {
+class FillPluginSpec extends BasePluginSpec {
     val plugin = FillPlugin
     "The parser of the fill plugin" should {
         val parser = plugin.commandParser
         "parse valid horizontal line commands" in {
-            val tokens = tokenize("B 0 0 x")
+            val tokens = tokenize("0 0 x")
             val expectedCommand = Fill(Point(0, 0), 'x')
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
 
         "refuse non-integers values" in {
-            val tokens = tokenize("B 0 10 0x")
+            val tokens = tokenize("0 10 0x")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
         }
 
         "refuse other malformed commands" in {
-            val tokens = tokenize("10 20 30")
+            val tokens = tokenize("asd 20 30")
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
@@ -31,7 +31,7 @@ class FillPluginSpec extends BaseParserSpec {
     }
 
     "The interpreter of a Fill Plugin" should {
-        val transition = plugin.toCanvasTransition _
+        val transition = plugin.transformCanvas _
         val canvas = CharCanvas.empty(10, 2)
             .drawPoint(Point(8, 1), 'x')
             .drawPoint(Point(8, 2), 'x')

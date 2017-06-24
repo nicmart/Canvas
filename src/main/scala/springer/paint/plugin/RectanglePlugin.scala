@@ -4,9 +4,9 @@ import springer.paint.canvas.{Canvas, CanvasDsl, DrawSequence}
 import springer.paint.point.Point
 import springer.paint.terminal.CommonParsers.{int, single}
 import springer.paint.terminal.Parser
-import springer.paint.terminal.Parser.times
+import springer.paint.terminal.Parser._
 
-object RectanglePlugin extends StateFreePlugin[Char, String] {
+object RectanglePlugin extends CanvasFreePlugin[Char, String] {
 
     import HorizontalLinePlugin.HorizontalLine
     import VerticalLinePlugin.VerticalLine
@@ -45,9 +45,7 @@ object RectanglePlugin extends StateFreePlugin[Char, String] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Rectangle] = {
-        val intParser = times(int, 4) map { ints =>
-            Rectangle(Point(ints(0), ints(1)), Point(ints(2), ints(3)))
-        }
-        single("R", intParser).flatten()
+        val pointParser = combine(int, int)(Point)
+        combine(pointParser, pointParser)(Rectangle)
     }
 }

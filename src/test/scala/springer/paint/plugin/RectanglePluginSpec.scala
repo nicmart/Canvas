@@ -6,12 +6,12 @@ import springer.paint.point.Point
 import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 import DrawSequence._
 
-class RectanglePluginSpec extends BaseParserSpec {
+class RectanglePluginSpec extends BasePluginSpec {
     val plugin = RectanglePlugin
     "The parser of a rectangle plugin" should {
         val parser = plugin.commandParser
         "parse a valid rectangle" in {
-            val tokens = tokenize("R 0 0 10 5")
+            val tokens = tokenize("0 0 10 5")
             val expected = Rectangle(Point(0, 0), Point(10, 5))
             parser.parse(tokens) shouldBe Success(expected, Nil)
         }

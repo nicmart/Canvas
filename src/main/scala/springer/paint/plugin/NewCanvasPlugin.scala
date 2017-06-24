@@ -4,7 +4,7 @@ import springer.paint.canvas.CharCanvas
 import springer.paint.state.{Initialised, PaintState}
 import springer.paint.terminal.CommonParsers.{positiveInt, single}
 import springer.paint.terminal.Parser
-import springer.paint.terminal.Parser.times
+import springer.paint.terminal.Parser._
 
 object NewCanvasPlugin extends Plugin[Char, String] {
 
@@ -25,7 +25,6 @@ object NewCanvasPlugin extends Plugin[Char, String] {
       * Parse an user input into this command
       */
     def commandParser: Parser[NewCanvas] = {
-        val ints = times(positiveInt, 2).map(ints => NewCanvas(ints(0), ints(1)))
-        single("C", ints).flatten()
+        combine(positiveInt, positiveInt)(NewCanvas)
     }
 }

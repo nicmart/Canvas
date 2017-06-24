@@ -19,10 +19,6 @@ trait Plugin[In, Out] {
       * The type of the new Command
       */
     type Command
-    final type State = PaintState[In, Out]
-    final type Canvas = PaintCanvas[In, Out]
-    final type StateTransition = State => State
-    final type CanvasTransition = Canvas => Canvas
 
     /**
       * Interpret the command
@@ -34,25 +30,46 @@ trait Plugin[In, Out] {
       */
     def commandParser: Parser[Command]
 
+    def error: String = "Invalid format"
+    def description: String = "Invalid format"
+
     /**
       * Parse user input and translate to a new state
       */
     def parser: Parser[StateTransition] =
         commandParser.map(command => interpret(command, _))
+
+    final type State = PaintState[In, Out]
+    final type Canvas = PaintCanvas[In, Out]
+    final type StateTransition = State => State
+    final type CanvasTransition = Canvas => Canvas
 }
 
-trait StateFreePlugin[In, Out] extends Plugin[In, Out] {
+/**
+  * A plugin for commands that draw on canvas.
+  * The behaviour of these plugins do not depend on the current state of the canvas
+  */
+trait CanvasFreePlugin[In, Out] extends Plugin[In, Out] {
+    /**
+      * Convert the command to a canvas DSL
+      */
     def toCanvasDsl(command: Command): CanvasDsl[In]
 
     override def interpret(command: Command, state: State): State =
         state.mapCanvas(_.run(toCanvasDsl(command)))
 }
 
-trait CanvasSensitivePlugin[In, Out] extends Plugin[In, Out] {
-    def toCanvasTransition(command: Command, canvas: Canvas): Canvas
+/**
+  * A plugin that acts on a canvas and that depends on it
+  */
+trait CanvasPlugin[In, Out] extends Plugin[In, Out] {
+    /**
+      * Apply this command to the canvas
+      */
+    def transformCanvas(command: Command, canvas: Canvas): Canvas
 
     override def interpret(command: Command, state: State): State =
-        state.mapCanvas(canvas => toCanvasTransition(command, canvas))
+        state.mapCanvas(canvas => transformCanvas(command, canvas))
 }
 
 object Plugin {

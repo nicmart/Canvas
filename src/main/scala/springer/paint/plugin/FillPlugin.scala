@@ -1,14 +1,14 @@
 package springer.paint.plugin
 
 import springer.paint.point.Point
-import springer.paint.terminal.CommonParsers.{char, int, single}
+import springer.paint.terminal.CommonParsers._
 import springer.paint.terminal.Parser
-import springer.paint.terminal.Parser.combine
+import springer.paint.terminal.Parser._
 
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
 
-object FillPlugin extends CanvasSensitivePlugin[Char, String] {
+object FillPlugin extends CanvasPlugin[Char, String] {
 
     final case class Fill(from: Point, input: Char)
 
@@ -20,7 +20,7 @@ object FillPlugin extends CanvasSensitivePlugin[Char, String] {
     /**
       * Canvas transition for this command
       */
-    def toCanvasTransition(command: Fill, canvas: Canvas): Canvas = {
+    def transformCanvas(command: Fill, canvas: Canvas): Canvas = {
         val Fill(from, newColor) = command
         canvas.valueAt(from) match {
             case None => canvas
@@ -33,9 +33,7 @@ object FillPlugin extends CanvasSensitivePlugin[Char, String] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Fill] = {
-        val pointParser = combine(int, int)(Point)
-        val fillParser = combine(pointParser, char)(Fill)
-        single("B", fillParser).flatten()
+        combine(point, char)(Fill)
     }
 
     @tailrec

@@ -9,7 +9,7 @@ import springer.paint.terminal.{Failure, Parser, Success}
 /**
   * Draw horizontal lines
   */
-object HorizontalLinePlugin extends StateFreePlugin[Char, String] {
+object HorizontalLinePlugin extends CanvasFreePlugin[Char, String] {
 
     final case class HorizontalLine(y: Int, fromX: Int, toX: Int)
 
@@ -17,6 +17,9 @@ object HorizontalLinePlugin extends StateFreePlugin[Char, String] {
       * The type of the new Command
       */
     type Command = HorizontalLine
+
+    override def description: String =
+        "Draw an horizontal line. Format: L x1 y1 "
 
     override def toCanvasDsl(line: HorizontalLine): CanvasDsl[Char] = {
         val actions = Plugin.range(line.fromX, line.toX).map {
@@ -29,15 +32,9 @@ object HorizontalLinePlugin extends StateFreePlugin[Char, String] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Command] = {
-        val intParser = times(int, 4).mapSuccess { success =>
-            success.value match {
-                case x1 :: y1 :: x2 :: y2 :: tail if y1 == y2 =>
-                    Success(HorizontalLine(y1, x1, x2), success.tail)
-                case _ =>
-                    Failure("Line not valid")
-            }
+        pair(point, point).map {
+            case (Point(x1, y1), Point(x2, y2)) if y1 == y2 =>
+                HorizontalLine(y1, x1, x2)
         }
-
-        single("L", intParser).flatten()
     }
 }
