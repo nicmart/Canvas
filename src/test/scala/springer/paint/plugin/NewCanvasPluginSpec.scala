@@ -1,8 +1,10 @@
 package springer.paint.plugin
 
+import springer.paint.canvas.CharCanvas
 import springer.paint.plugin.FillPlugin.Fill
 import springer.paint.plugin.NewCanvasPlugin.NewCanvas
 import springer.paint.point.Point
+import springer.paint.state.{Initialised, Uninitialised}
 import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 
 class NewCanvasPluginSpec extends BaseParserSpec {
@@ -34,6 +36,21 @@ class NewCanvasPluginSpec extends BaseParserSpec {
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
+        }
+    }
+
+    "The interpreter of a new Canvas Plugin" should {
+        val interpreter = plugin.interpret _
+        val command = NewCanvas(30, 10)
+        "initialise an un-initialised state" in {
+            val start: NewCanvasPlugin.State = Uninitialised()
+            val expected = Initialised(CharCanvas.empty(30, 10))
+            interpreter(command, start) shouldBe expected
+        }
+        "replace an initialised state" in {
+            val start: NewCanvasPlugin.State = Initialised(CharCanvas.empty(10, 10))
+            val expected = Initialised(CharCanvas.empty(30, 10))
+            interpreter(command, start) shouldBe expected
         }
     }
 }
