@@ -20,6 +20,14 @@ sealed trait PaintState[In, Out] {
     }
 
     /**
+      * Tell if the state is the final state
+      */
+    def isFinal: Boolean = this match {
+        case Final() => true
+        case _ => false
+    }
+
+    /**
       * Apply a transformation to a canvas, if we are in an initialised state
       */
     def mapCanvas(f: Canvas[In, Out] => Canvas[In, Out]): PaintState[In, Out] = this match {
@@ -30,5 +38,6 @@ sealed trait PaintState[In, Out] {
 
 case class Uninitialised[In, Out]() extends PaintState[In, Out]
 case class Initialised[In, Out](canvas: Canvas[In, Out]) extends PaintState[In, Out]
+case class Final[In, Out]() extends PaintState[In, Out]
 
 

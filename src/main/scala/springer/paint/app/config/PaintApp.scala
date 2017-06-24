@@ -12,7 +12,7 @@ object PaintApp extends App {
     var state: Wiring.DefaultPaintState = Wiring.initialState
     val painter = Wiring.painter
 
-    while (true) {
+    while (!state.isFinal) {
         val line = StdIn.readLine("Enter command: ")
         state = painter.run(state, line)
         state.mapCanvas(c => { println(c.output); c})
