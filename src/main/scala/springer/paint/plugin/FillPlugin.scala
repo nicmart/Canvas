@@ -5,6 +5,7 @@ import springer.paint.terminal.CommonParsers.{char, int, single}
 import springer.paint.terminal.Parser
 import springer.paint.terminal.Parser.combine
 
+import scala.annotation.tailrec
 import scala.collection.immutable.Queue
 
 object FillPlugin extends CanvasSensitivePlugin[Char, String] {
@@ -20,24 +21,11 @@ object FillPlugin extends CanvasSensitivePlugin[Char, String] {
       * Canvas transition for this command
       */
     def toCanvasTransition(command: Fill, canvas: Canvas): Canvas = {
-        val Fill(from, value) = command
+        val Fill(from, newColor) = command
         canvas.valueAt(from) match {
             case None => canvas
-            case Some(color) =>
-                var newCanvas = canvas
-                var queue: Queue[Point] = Queue.empty.enqueue(from)
-                while (queue.nonEmpty) {
-                    val (point, dequeued) = queue.dequeue
-                    if (newCanvas.valueAt(point).contains(color)) {
-                        newCanvas = newCanvas.drawPoint(point, value)
-                        queue = dequeued.enqueue(newCanvas.neighboursOf(point).filter { point =>
-                            newCanvas.valueAt(point).contains(color)
-                        })
-                    } else {
-                        queue = dequeued
-                    }
-                }
-                newCanvas
+            case Some(currentColor) =>
+                fill(canvas, Queue.empty.enqueue(from), currentColor, newColor)
         }
     }
 
@@ -48,5 +36,29 @@ object FillPlugin extends CanvasSensitivePlugin[Char, String] {
         val pointParser = combine(int, int)(Point)
         val fillParser = combine(pointParser, char)(Fill)
         single("B", fillParser).flatten()
+    }
+
+    @tailrec
+    private def fill(
+        canvas: Canvas,
+        points: Queue[Point],
+        fromChar: Char,
+        toChar: Char
+    ): Canvas = {
+        if (points.nonEmpty) {
+            val (point, remainingPoints) = points.dequeue
+            if (canvas.valueAt(point).contains(fromChar)) {
+                val newCanvas = canvas.drawPoint(point, toChar)
+                val neighboursWithSameColors = newCanvas.neighboursOf(point).filter {
+                    point => newCanvas.valueAt(point).contains(fromChar)
+                }
+                val nextPoints = remainingPoints.enqueue(neighboursWithSameColors)
+                fill(newCanvas, nextPoints, fromChar, toChar)
+            } else {
+                fill(canvas, remainingPoints, fromChar, toChar)
+            }
+        } else {
+            canvas
+        }
     }
 }

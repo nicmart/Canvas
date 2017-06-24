@@ -1,9 +1,9 @@
 package springer.paint.plugin
 
+import springer.paint.canvas.CharCanvas
 import springer.paint.plugin.FillPlugin.Fill
 import springer.paint.point.Point
-import springer.paint.spec.CommonSpec
-import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
+import springer.paint.terminal.{BaseParserSpec, Failure, Success}
 
 class FillPluginSpec extends BaseParserSpec {
     val plugin = FillPlugin
@@ -27,6 +27,22 @@ class FillPluginSpec extends BaseParserSpec {
             inside(parser.parse(tokens)) {
                 case Failure(_) =>
             }
+        }
+    }
+
+    "The interpreter of a Fill Plugin" should {
+        val transition = plugin.toCanvasTransition _
+        val canvas = CharCanvas.empty(10, 2)
+            .drawPoint(Point(8, 1), 'x')
+            .drawPoint(Point(8, 2), 'x')
+        "Fill contiguous blocks of pixels" in {
+            val newCanvas = transition(Fill(Point(9, 1), 'o'), canvas)
+            newCanvas.valueAt(Point(9, 1)) shouldBe Some('o')
+            newCanvas.valueAt(Point(9, 2)) shouldBe Some('o')
+            newCanvas.valueAt(Point(10, 1)) shouldBe Some('o')
+            newCanvas.valueAt(Point(10, 2)) shouldBe Some('o')
+            newCanvas.valueAt(Point(8, 1)) shouldBe Some('x')
+            newCanvas.valueAt(Point(1, 1)) shouldBe Some(' ')
         }
     }
 }
