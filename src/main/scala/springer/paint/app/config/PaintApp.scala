@@ -1,20 +1,25 @@
 package springer.paint.app.config
 
-import springer.paint.terminal._
-
+import scala.annotation.tailrec
 import scala.io.StdIn
 
-/**
-  * Created by Nicolò Martini on 29/04/2017.
-  */
 object PaintApp extends App {
 
-    var state: Wiring.DefaultPaintState = Wiring.initialState
-    val painter = Wiring.painter
+    import Wiring._
 
-    while (!state.isFinal) {
+    loop(initialState)
+
+    @tailrec
+    def loop(state: DefaultPaintState): Unit = {
         val line = StdIn.readLine("Enter command: ")
-        state = painter.run(state, line)
-        state.mapCanvas(c => { println(c.output); c})
+        val (output, nextState) = painter.run(state, line).consumeOutput
+        if (output.isEmpty) {
+            nextState.mapCanvas(c => { println(c.output); c})
+        } else {
+            output.foreach(println)
+        }
+        if (!nextState.isFinal) {
+            loop(nextState)
+        }
     }
 }

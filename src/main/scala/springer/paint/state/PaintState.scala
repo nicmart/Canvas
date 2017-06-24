@@ -16,6 +16,7 @@ sealed trait PaintState[In, Out] {
       */
     def isInitialised: Boolean = this match {
         case Initialised(_) => true
+        case Output(_, Initialised(_)) => true
         case _ => false
     }
 
@@ -32,12 +33,30 @@ sealed trait PaintState[In, Out] {
       */
     def mapCanvas(f: Canvas[In, Out] => Canvas[In, Out]): PaintState[In, Out] = this match {
         case Initialised(canvas) => Initialised(f(canvas))
+        case Output(messages, state) => Output(messages, state.mapCanvas(f))
         case _ => this
+    }
+
+    /**
+      * Add an output to the state
+      */
+    def addOutput(output: String): PaintState[In, Out] = this match {
+        case Output(messages, state) => Output(messages.enqueue(output), state)
+        case _ => Output(Queue(output), this)
+    }
+
+    /**
+      * Consume the output, and return the next state
+      */
+    def consumeOutput: (Queue[String], PaintState[In, Out]) = this match {
+        case Output(messages, state) => (messages, state)
+        case _ => (Queue.empty, this)
     }
 }
 
 final case class Uninitialised[In, Out]() extends PaintState[In, Out]
 final case class Initialised[In, Out](canvas: Canvas[In, Out]) extends PaintState[In, Out]
 final case class Final[In, Out]() extends PaintState[In, Out]
+final case class Output[In, Out](messages: Queue[String], state: PaintState[In, Out]) extends PaintState[In, Out]
 
 

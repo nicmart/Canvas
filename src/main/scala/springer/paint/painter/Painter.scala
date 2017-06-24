@@ -39,10 +39,7 @@ final case class Painter[In, Out] private (
         parser.parse(input.split(" ").toList) match {
             case Success(transition, _) => transition(state)
             case Failure(msg) =>
-                // @todo remove this
-                println("Invalid Command")
-                println(msg)
-                state
+                state.addOutput("Invalid Command").addOutput(msg)
         }
 
     private def commandParser: Parser[List[PluginWithDescription[In, Out]]] = {

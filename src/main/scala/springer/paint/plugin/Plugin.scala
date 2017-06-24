@@ -55,8 +55,13 @@ trait CanvasFreePlugin[In, Out] extends Plugin[In, Out] {
       */
     def toCanvasDsl(command: Command): CanvasDsl[In]
 
-    override def interpret(command: Command, state: State): State =
-        state.mapCanvas(_.run(toCanvasDsl(command)))
+    override def interpret(command: Command, state: State): State = {
+        if (state.isInitialised) {
+            state.mapCanvas(_.run(toCanvasDsl(command)))
+        } else {
+            state.addOutput("This command is available only after a canvas is created.")
+        }
+    }
 }
 
 /**
@@ -68,8 +73,13 @@ trait CanvasPlugin[In, Out] extends Plugin[In, Out] {
       */
     def transformCanvas(command: Command, canvas: Canvas): Canvas
 
-    override def interpret(command: Command, state: State): State =
-        state.mapCanvas(canvas => transformCanvas(command, canvas))
+    override def interpret(command: Command, state: State): State = {
+        if (state.isInitialised) {
+            state.mapCanvas(canvas => transformCanvas(command, canvas))
+        } else {
+            state.addOutput("This command is available only after a canvas is created.")
+        }
+    }
 }
 
 object Plugin {
