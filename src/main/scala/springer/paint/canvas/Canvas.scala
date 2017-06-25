@@ -5,7 +5,7 @@ import springer.paint.point.Point
 /**
   * Low-level Canvas Type. Provide only drawPoint primitive.
   */
-case class Canvas[In] (
+case class Canvas[+In] (
     width: Int,
     height: Int,
     pixels: IndexedSeq[IndexedSeq[In]]
@@ -13,7 +13,7 @@ case class Canvas[In] (
     /**
       * Draw a point on a canvas
       */
-    def drawPoint(position: Point, input: In): Canvas[In] = {
+    def drawPoint[In2 >: In](position: Point, input: In2): Canvas[In2] = {
         if (isPointInCanvas(position)) {
             val newRow = pixels(position.y - 1).updated(position.x - 1, input)
             val newPixels = pixels.updated(position.y - 1, newRow)
@@ -51,10 +51,10 @@ case class Canvas[In] (
     /**
       * Draw any CanvasDsl action
       */
-    def run(action: CanvasDsl[In]): Canvas[In] =
+    def run[In2 >: In](action: CanvasDsl[In2]): Canvas[In2] =
         action match {
             case DrawPoint(point, in) => drawPoint(point, in)
-            case DrawSequence(actions) => actions.foldLeft(this)(_.run(_))
+            case DrawSequence(actions) => actions.foldLeft[Canvas[In2]](this)(_.run(_))
         }
 }
 
