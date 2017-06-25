@@ -54,6 +54,17 @@ class CanvasSpec extends CommonSpec {
                 Point(1, 2)
             ).toSet
         }
+
+        "return all the pixels" in {
+            val canvas = CharCanvas.empty(4, 3)
+                .drawPoint(Point(1, 1), 'x')
+                .drawPoint(Point(2, 2), 'y')
+            canvas.pixels shouldBe IndexedSeq(
+                IndexedSeq('x', ' ', ' ', ' '),
+                IndexedSeq(' ', 'y', ' ', ' '),
+                IndexedSeq(' ', ' ', ' ', ' ')
+            )
+        }
     }
 
 }

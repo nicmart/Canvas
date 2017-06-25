@@ -24,7 +24,12 @@ trait Canvas[In, +Out] {
     /**
       * Get the output of the canvas
       */
-    def output: Out
+    def output: String
+
+    /**
+      * Return all the pixels
+      */
+    def pixels: IndexedSeq[IndexedSeq[In]]
 
     /**
       * Get the value of a pixel on the canvas
@@ -41,6 +46,9 @@ trait Canvas[In, +Out] {
         point + Point(-1, 0)
     ).filter(isPointInCanvas)
 
+    /**
+      * Is the point in this canvas?
+      */
     def isPointInCanvas(p: Point): Boolean = {
         p.x >= 1 && p.x <= width && p.y >= 1 && p.y <= height
     }
@@ -61,29 +69,31 @@ trait Canvas[In, +Out] {
 case class CharCanvas(
     width: Int,
     height: Int,
-    private val pixels: Vector[String]
+    pixels: IndexedSeq[IndexedSeq[Char]]
 ) extends Canvas[Char, String] {
     /**
       * Draw a point on a canvas
       */
     def drawPoint(position: Point, input: Char): Canvas[Char, String] = {
         if (isPointInCanvas(position)) {
-            val oldRow = pixels(position.y - 1)
-            val newRow = oldRow.substring(0, position.x - 1) + input + oldRow.substring(position.x, width)
-            copy(pixels = pixels.updated(position.y - 1, newRow))
+            val newRow = pixels(position.y - 1).updated(position.x - 1, input)
+            val newPixels = pixels.updated(position.y - 1, newRow)
+            copy(pixels = newPixels)
         } else this
     }
 
     def output: String = {
 //        val line = "-" * (width + 2)
 //        (line +:  pixels.map("|" + _ + "|") :+ line).mkString("\n")
-        pixels.mkString("\n")
+        pixels.map(_.mkString("")).mkString("\n")
     }
 
     def valueAt(position: Point): Option[Char] =
         if (isPointInCanvas(position)) {
             Some(pixels(position.y - 1)(position.x - 1))
-        } else None
+        } else {
+            None
+        }
 }
 
 object CharCanvas {
@@ -91,6 +101,6 @@ object CharCanvas {
         CharCanvas(
             width,
             height,
-            Vector.fill(height)(" " * width)
+            IndexedSeq.fill(height, width)(' ')
         )
 }
