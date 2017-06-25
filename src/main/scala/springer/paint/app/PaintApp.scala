@@ -33,7 +33,7 @@ final case class PaintApp(
         val stateWithoutOutput = printOutput(state)
 
         if (!stateWithoutOutput.isFinal) {
-            val line = StdIn.readLine("Enter command: ")
+            val line = StdIn.readLine("\nEnter command: ")
             loop(painter.run(stateWithoutOutput, line))
         }
     }

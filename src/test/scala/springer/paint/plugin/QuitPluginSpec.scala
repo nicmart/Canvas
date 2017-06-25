@@ -14,12 +14,12 @@ class QuitPluginSpec extends BasePluginSpec {
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
 
-//        "refuse other malformed commands" in {
-//            val tokens = tokenize("10")
-//            inside(parser.parse(tokens)) {
-//                case Failure(_) =>
-//            }
-//        }
+        "refuse other malformed commands" in {
+            val tokens = tokenize("Q 10")
+            inside(parser.parse(tokens)) {
+                case Failure(_) =>
+            }
+        }
     }
 
     "The interpreter of a Quit Plugin" should {

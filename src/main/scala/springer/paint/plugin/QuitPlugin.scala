@@ -37,5 +37,5 @@ object QuitPlugin extends Plugin[Nothing] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Quit.type] =
-        successful(Quit)
+        successful(Quit).finalise()
 }

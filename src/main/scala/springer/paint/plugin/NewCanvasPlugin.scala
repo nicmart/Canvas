@@ -28,7 +28,7 @@ case class NewCanvasPlugin[In](emptySymbol: In) extends Plugin[In] {
       */
     def description(commandSymbol: String): String =
         s"""
-           |New Canvas command: draw an horizontal line
+           |New Canvas command: create a new Canvas
            |Format: $commandSymbol w h, where w and h are positive integers
          """.stripMargin.trim
 
@@ -42,6 +42,6 @@ case class NewCanvasPlugin[In](emptySymbol: In) extends Plugin[In] {
       * Parse an user input into this command
       */
     def commandParser: Parser[NewCanvas] = {
-        combine(positiveInt, positiveInt)(NewCanvas)
+        combine(positiveInt, positiveInt)(NewCanvas).finalise()
     }
 }

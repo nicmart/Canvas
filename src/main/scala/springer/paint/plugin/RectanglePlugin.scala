@@ -69,6 +69,6 @@ case class RectanglePlugin[In](
       */
     def commandParser: Parser[Rectangle] = {
         val pointParser = combine(int, int)(Point)
-        combine(pointParser, pointParser)(Rectangle)
+        combine(pointParser, pointParser)(Rectangle).finalise()
     }
 }

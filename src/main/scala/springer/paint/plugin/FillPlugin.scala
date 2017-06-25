@@ -51,7 +51,7 @@ case class FillPlugin[In](inputParser: Parser[In]) extends CanvasPlugin[In] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Fill] = {
-        combine(point, inputParser)(Fill)
+        combine(point, inputParser)(Fill).finalise()
     }
 
     /**

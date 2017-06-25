@@ -46,6 +46,6 @@ case class VerticalLinePlugin[In](symbol: In) extends CanvasFreePlugin[In] {
         pair(point, point).map {
             case (Point(x1, y1), Point(x2, y2)) if x1 == x2 =>
                 VerticalLine(x1, y1, y2)
-        }
+        }.finalise()
     }
 }

@@ -43,6 +43,6 @@ case class HorizontalLinePlugin[In](symbol: In) extends CanvasFreePlugin[In] {
         pair(point, point).map {
             case (Point(x1, y1), Point(x2, y2)) if y1 == y2 =>
                 HorizontalLine(y1, x1, x2)
-        }
+        }.finalise()
     }
 }
