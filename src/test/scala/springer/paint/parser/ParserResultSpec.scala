@@ -1,8 +1,5 @@
 package springer.paint.parser
 
-/**
-  * Created by Nicolò Martini <nicolo@martini.io>.
-  */
 class ParserResultSpec extends BaseParserSpec{
     "A Successful parser result" should {
         "return itself when or-ed with any another result" in {

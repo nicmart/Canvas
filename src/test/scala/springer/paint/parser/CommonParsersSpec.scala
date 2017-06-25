@@ -2,9 +2,6 @@ package springer.paint.parser
 
 import springer.paint.parser.CommonParsers._
 
-/**
-  * Created by Nicolò Martini <nicolo@martini.io>.
-  */
 class CommonParsersSpec extends BaseParserSpec{
     "`first` parser" should {
         "return the first token" in {

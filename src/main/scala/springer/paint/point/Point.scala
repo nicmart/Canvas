@@ -1,7 +1,7 @@
 package springer.paint.point
 
 /**
-  * Created by Nicolò Martini on 28/04/2017.
+  * A 2D point of integer coordinates
   */
 final case class Point(x: Int, y: Int) {
     def +(other: Point): Point = Point(x + other.x, y + other.y)

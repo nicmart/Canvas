@@ -5,10 +5,6 @@ import springer.paint.app.config.Wiring
 import springer.paint.canvas.Canvas
 import springer.paint.state.{Initialised, PaintState, Uninitialised}
 
-
-/**
-  * Created by Nicolò Martini on 27/04/2017.
-  */
 class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside {
 
     import springer.paint.app.config.Wiring._
