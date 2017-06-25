@@ -9,10 +9,13 @@ import springer.paint.terminal.CommonParsers._
 trait Wiring {
     type DefaultPaintState = PaintState[Char]
     lazy val initialState = Uninitialised[Char]()
+
+    // Default symbols for lines and white pixels
     lazy val lineSymbol = 'x'
+    lazy val emptySymbol = ' '
 
     // Plugins
-    lazy val newCanvasPlugin = NewCanvasPlugin
+    lazy val newCanvasPlugin = NewCanvasPlugin(emptySymbol)
     lazy val horizontalLinePlugin = HorizontalLinePlugin(lineSymbol)
     lazy val verticalLinePlugin = VerticalLinePlugin(lineSymbol)
     lazy val rectanglePlugin = RectanglePlugin(horizontalLinePlugin, verticalLinePlugin)

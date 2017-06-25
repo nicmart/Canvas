@@ -1,18 +1,17 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
-import springer.paint.plugin.NewCanvasPlugin.NewCanvas
 import springer.paint.point.Point
 import springer.paint.state.{Initialised, Uninitialised}
 import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 
 class NewCanvasPluginSpec extends BasePluginSpec {
-    val plugin = NewCanvasPlugin
+    val plugin = NewCanvasPlugin(' ')
     "The parser of the new canvas plugin" should {
         val parser = plugin.commandParser
         "parse valid commands" in {
             val tokens = tokenize("10 1")
-            val expectedCommand = NewCanvas(10, 1)
+            val expectedCommand = plugin.NewCanvas(10, 1)
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
 
@@ -40,14 +39,14 @@ class NewCanvasPluginSpec extends BasePluginSpec {
 
     "The interpreter of a new Canvas Plugin" should {
         val interpreter = plugin.interpret _
-        val command = NewCanvas(30, 10)
+        val command = plugin.NewCanvas(30, 10)
         "initialise an un-initialised state" in {
-            val start: NewCanvasPlugin.State = Uninitialised()
+            val start: plugin.State = Uninitialised()
             val expected = Initialised(Canvas.filled(30, 10, ' '))
             interpreter(command, start) shouldBe expected
         }
         "replace an initialised state" in {
-            val start: NewCanvasPlugin.State = Initialised(Canvas.filled(10, 10, ' '))
+            val start: plugin.State = Initialised(Canvas.filled(10, 10, ' '))
             val expected = Initialised(Canvas.filled(30, 10, ' '))
             interpreter(command, start) shouldBe expected
         }
