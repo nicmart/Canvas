@@ -8,9 +8,9 @@ import springer.paint.terminal.Parser._
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
 
-object FillPlugin extends CanvasPlugin[Char] {
+case class FillPlugin[In](inputParser: Parser[In]) extends CanvasPlugin[In] {
 
-    final case class Fill(from: Point, input: Char)
+    final case class Fill(from: Point, input: In)
 
     /**
       * Return some help about this command
@@ -44,27 +44,27 @@ object FillPlugin extends CanvasPlugin[Char] {
       * Parse an user input into this command
       */
     def commandParser: Parser[Fill] = {
-        combine(point, char)(Fill)
+        combine(point, inputParser)(Fill)
     }
 
     @tailrec
     private def fill(
         canvas: Canvas,
         points: Queue[Point],
-        fromChar: Char,
-        toChar: Char
+        from: In,
+        to: In
     ): Canvas = {
         if (points.nonEmpty) {
             val (point, remainingPoints) = points.dequeue
-            if (canvas.valueAt(point).contains(fromChar)) {
-                val newCanvas = canvas.drawPoint(point, toChar)
+            if (canvas.valueAt(point).contains(from)) {
+                val newCanvas = canvas.drawPoint(point, to)
                 val neighboursWithSameColors = newCanvas.neighboursOf(point).filter {
-                    point => newCanvas.valueAt(point).contains(fromChar)
+                    point => newCanvas.valueAt(point).contains(from)
                 }
                 val nextPoints = remainingPoints.enqueue(neighboursWithSameColors)
-                fill(newCanvas, nextPoints, fromChar, toChar)
+                fill(newCanvas, nextPoints, from, to)
             } else {
-                fill(canvas, remainingPoints, fromChar, toChar)
+                fill(canvas, remainingPoints, from, to)
             }
         } else {
             canvas

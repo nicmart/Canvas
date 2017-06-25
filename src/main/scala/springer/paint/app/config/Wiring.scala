@@ -4,6 +4,7 @@ import springer.paint.canvas.Canvas
 import springer.paint.painter.Painter
 import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.plugin._
+import springer.paint.terminal.CommonParsers._
 
 trait Wiring {
     type DefaultPaintState = PaintState[Char]
@@ -17,7 +18,7 @@ trait Wiring {
         .addPlugin("L", HorizontalLinePlugin)
         .addPlugin("L", VerticalLinePlugin)
         .addPlugin("R", RectanglePlugin)
-        .addPlugin("B", FillPlugin)
+        .addPlugin("B", FillPlugin(char))
         .addPlugin("Q", QuitPlugin())
 }
 

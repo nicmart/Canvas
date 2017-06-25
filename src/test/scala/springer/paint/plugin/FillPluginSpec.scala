@@ -1,17 +1,17 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
-import springer.paint.plugin.FillPlugin.Fill
+import springer.paint.terminal.CommonParsers._
 import springer.paint.point.Point
 import springer.paint.terminal.{BaseParserSpec, Failure, Success}
 
 class FillPluginSpec extends BasePluginSpec {
-    val plugin = FillPlugin
+    val plugin = FillPlugin(char)
     "The parser of the fill plugin" should {
         val parser = plugin.commandParser
         "parse valid horizontal line commands" in {
             val tokens = tokenize("0 0 x")
-            val expectedCommand = Fill(Point(0, 0), 'x')
+            val expectedCommand = plugin.Fill(Point(0, 0), 'x')
             parser.parse(tokens) shouldBe Success(expectedCommand, Nil)
         }
 
@@ -36,7 +36,7 @@ class FillPluginSpec extends BasePluginSpec {
             .drawPoint(Point(8, 1), 'x')
             .drawPoint(Point(8, 2), 'x')
         "Fill contiguous blocks of pixels" in {
-            val newCanvas = transition(Fill(Point(9, 1), 'o'), canvas)
+            val newCanvas = transition(plugin.Fill(Point(9, 1), 'o'), canvas)
             newCanvas.valueAt(Point(9, 1)) shouldBe Some('o')
             newCanvas.valueAt(Point(9, 2)) shouldBe Some('o')
             newCanvas.valueAt(Point(10, 1)) shouldBe Some('o')

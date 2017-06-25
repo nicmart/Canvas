@@ -1,7 +1,6 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
-import springer.paint.plugin.FillPlugin.Fill
 import springer.paint.plugin.NewCanvasPlugin.NewCanvas
 import springer.paint.point.Point
 import springer.paint.state.{Initialised, Uninitialised}
