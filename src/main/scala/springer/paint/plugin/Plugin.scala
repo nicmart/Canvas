@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{Canvas => PaintCanvas, CanvasDsl}
+import springer.paint.canvas.{Canvas, CanvasDsl}
 import springer.paint.state.PaintState
 import springer.paint.terminal.Parser
 
@@ -14,7 +14,7 @@ import springer.paint.terminal.Parser
   *
   * The plugin also provide the parser that translate the user input into the new Command
   */
-trait Plugin[In] {
+trait Plugin[+In] {
     /**
       * The type of the new Command
       */
@@ -23,7 +23,7 @@ trait Plugin[In] {
     /**
       * Interpret the command
       */
-    def interpret(command: Command, state: State): State
+    def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2]
 
     /**
       * Parse an user input into this command
@@ -40,13 +40,8 @@ trait Plugin[In] {
     /**
       * Parse user input and translate to a new state
       */
-    def parser: Parser[StateTransition] =
+    def parser[In2 >: In]: Parser[PaintState[In2] => PaintState[In2]] =
         commandParser.map(command => interpret(command, _))
-
-    final type State = PaintState[In]
-    final type Canvas = PaintCanvas[In]
-    final type StateTransition = State => State
-    final type CanvasTransition = Canvas => Canvas
 }
 
 /**
@@ -59,7 +54,7 @@ trait CanvasFreePlugin[In] extends Plugin[In] {
       */
     def toCanvasDsl(command: Command): CanvasDsl[In]
 
-    override def interpret(command: Command, state: State): State = {
+    override def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
         if (state.isInitialised) {
             state.mapCanvas(_.run(toCanvasDsl(command)))
         } else {
@@ -75,11 +70,11 @@ trait CanvasPlugin[In] extends Plugin[In] {
     /**
       * Apply this command to the canvas
       */
-    def transformCanvas(command: Command, canvas: Canvas): Canvas
+    def transformCanvas[In2 >: In](command: Command, canvas: Canvas[In2]): Canvas[In2]
 
-    override def interpret(command: Command, state: State): State = {
+    override def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
         if (state.isInitialised) {
-            state.mapCanvas(canvas => transformCanvas(command, canvas))
+            state.mapCanvas[In2](canvas => transformCanvas(command, canvas))
         } else {
             state.addOutput("This command is available only after a canvas is created.")
         }

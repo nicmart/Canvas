@@ -41,12 +41,12 @@ class NewCanvasPluginSpec extends BasePluginSpec {
         val interpreter = plugin.interpret _
         val command = plugin.NewCanvas(30, 10)
         "initialise an un-initialised state" in {
-            val start: plugin.State = Uninitialised
+            val start = Uninitialised
             val expected = Initialised(Canvas.filled(30, 10, ' '))
             interpreter(command, start) shouldBe expected
         }
         "replace an initialised state" in {
-            val start: plugin.State = Initialised(Canvas.filled(10, 10, ' '))
+            val start = Initialised(Canvas.filled(10, 10, ' '))
             val expected = Initialised(Canvas.filled(30, 10, ' '))
             interpreter(command, start) shouldBe expected
         }

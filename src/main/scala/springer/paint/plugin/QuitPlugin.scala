@@ -1,10 +1,13 @@
 package springer.paint.plugin
 
-import springer.paint.state.Final
+import springer.paint.state.{Final, PaintState}
 import springer.paint.terminal.Parser
 import springer.paint.terminal.CommonParsers._
 
-final case class QuitPlugin[In]() extends Plugin[In] {
+/**
+  * Quit plugin that implements the Quit command
+  */
+object QuitPlugin extends Plugin[Nothing] {
 
     object Quit
 
@@ -27,7 +30,7 @@ final case class QuitPlugin[In]() extends Plugin[In] {
     /**
       * Interpret the command
       */
-    def interpret(command: Quit.type, state: State): State =
+    override def interpret[In2 >: Nothing](command: Quit.type, state: PaintState[In2]): PaintState[In2] =
         Final
 
     /**

@@ -1,5 +1,6 @@
 package springer.paint.plugin
 
+import springer.paint.canvas.Canvas
 import springer.paint.point.Point
 import springer.paint.terminal.CommonParsers._
 import springer.paint.terminal.Parser
@@ -8,6 +9,12 @@ import springer.paint.terminal.Parser._
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
 
+/**
+  * Bucket-fill plugin.
+  *
+  * @param inputParser The parser that translates a string into an input
+  * @tparam In The type of the input
+  */
 case class FillPlugin[In](inputParser: Parser[In]) extends CanvasPlugin[In] {
 
     final case class Fill(from: Point, input: In)
@@ -31,7 +38,7 @@ case class FillPlugin[In](inputParser: Parser[In]) extends CanvasPlugin[In] {
     /**
       * Canvas transition for this command
       */
-    def transformCanvas(command: Fill, canvas: Canvas): Canvas = {
+    override def transformCanvas[In2 >: In](command: Fill, canvas: Canvas[In2]): Canvas[In2] = {
         val Fill(from, newColor) = command
         canvas.valueAt(from) match {
             case None => canvas
@@ -47,13 +54,17 @@ case class FillPlugin[In](inputParser: Parser[In]) extends CanvasPlugin[In] {
         combine(point, inputParser)(Fill)
     }
 
-    @tailrec
-    private def fill(
-        canvas: Canvas,
+    /**
+      * The recursive-algorithm for bucket-fill
+      * It's a breadth-first search on the graph where two points are connected
+      * if they are contiguous and they have the same color
+      */
+    @tailrec private def fill[In2 >: In](
+        canvas: Canvas[In2],
         points: Queue[Point],
-        from: In,
+        from: In2,
         to: In
-    ): Canvas = {
+    ): Canvas[In2] = {
         if (points.nonEmpty) {
             val (point, remainingPoints) = points.dequeue
             if (canvas.valueAt(point).contains(from)) {

@@ -20,7 +20,7 @@ trait Wiring {
     lazy val verticalLinePlugin = VerticalLinePlugin(lineSymbol)
     lazy val rectanglePlugin = RectanglePlugin(horizontalLinePlugin, verticalLinePlugin)
     lazy val fillPlugin = FillPlugin(char)
-    lazy val quitPlugin = QuitPlugin[Char]()
+    lazy val quitPlugin = QuitPlugin
 
     /**
       * Build a painter object with the desired plugins

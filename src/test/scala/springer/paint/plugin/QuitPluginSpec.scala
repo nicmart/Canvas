@@ -5,7 +5,7 @@ import springer.paint.state.{Final, Initialised, Uninitialised}
 import springer.paint.terminal.{Failure, ParserSpec, Success}
 
 class QuitPluginSpec extends BasePluginSpec {
-    val plugin = QuitPlugin[Char]()
+    val plugin = QuitPlugin
     "The parser of the quit plugin" should {
         val parser = plugin.commandParser
         "parse valid commands" in {
@@ -23,15 +23,15 @@ class QuitPluginSpec extends BasePluginSpec {
     }
 
     "The interpreter of a Quit Plugin" should {
-        val interpreter = plugin.interpret _
+        val interpreter = plugin.interpret[Any] _
         val command = plugin.Quit
         "finalise an uninitialised state" in {
-            val start: plugin.State = Uninitialised
+            val start = Uninitialised
             val expected = Final
             interpreter(command, start) shouldBe expected
         }
         "finalise an initialised state" in {
-            val start: plugin.State = Initialised(Canvas.filled(10, 10, ' '))
+            val start = Initialised(Canvas.filled(10, 10, ' '))
             val expected = Final
             interpreter(command, start) shouldBe expected
         }
