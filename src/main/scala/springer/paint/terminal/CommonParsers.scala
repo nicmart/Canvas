@@ -47,7 +47,7 @@ object CommonParsers {
     /**
       * Parse the first token, expecting it to be a single char
       */
-    var char: Parser[Char] =
+    val char: Parser[Char] =
         first
             .filter(_.length == 1)
             .map(_.head)

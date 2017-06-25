@@ -25,7 +25,7 @@ final case class PaintApp(
       * The main application loop
       * It prints the state output, and if the state is not final,
       * it asks the user input for a new command.
-      * 
+      *
       * It exits otherwise.
       */
     @tailrec private def loop(state: PaintState[Char]): Unit = {
