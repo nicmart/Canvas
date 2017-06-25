@@ -2,9 +2,9 @@ package springer.paint.plugin
 
 import springer.paint.canvas.{Canvas, CanvasDsl, DrawPoint, DrawSequence}
 import springer.paint.point.Point
-import springer.paint.terminal.{Failure, Parser, Success}
-import springer.paint.terminal.CommonParsers._
-import springer.paint.terminal.Parser._
+import springer.paint.parser.{Failure, Parser, Success}
+import springer.paint.parser.CommonParsers._
+import springer.paint.parser.Parser._
 
 /**
   * Draw vertical lines

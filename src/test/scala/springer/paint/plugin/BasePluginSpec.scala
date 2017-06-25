@@ -1,5 +1,5 @@
 package springer.paint.plugin
 
-import springer.paint.terminal.BaseParserSpec
+import springer.paint.parser.BaseParserSpec
 
 trait BasePluginSpec extends BaseParserSpec

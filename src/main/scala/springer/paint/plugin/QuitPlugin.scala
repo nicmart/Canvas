@@ -1,8 +1,8 @@
 package springer.paint.plugin
 
 import springer.paint.state.{Final, PaintState}
-import springer.paint.terminal.Parser
-import springer.paint.terminal.CommonParsers._
+import springer.paint.parser.Parser
+import springer.paint.parser.CommonParsers._
 
 /**
   * Quit plugin that implements the Quit command

@@ -1,10 +1,11 @@
 package springer.paint.app.config
 
+import springer.paint.app.PaintApp
 import springer.paint.canvas.{BorderCanvasRenderer, Canvas}
 import springer.paint.painter.Painter
 import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.plugin.{FillPlugin, HorizontalLinePlugin, RectanglePlugin, VerticalLinePlugin, _}
-import springer.paint.terminal.CommonParsers._
+import springer.paint.parser.CommonParsers._
 
 trait Wiring {
     type DefaultPaintState = PaintState[Char]

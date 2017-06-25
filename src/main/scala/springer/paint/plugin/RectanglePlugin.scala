@@ -2,9 +2,9 @@ package springer.paint.plugin
 
 import springer.paint.canvas.{Canvas, CanvasDsl, DrawSequence}
 import springer.paint.point.Point
-import springer.paint.terminal.CommonParsers.{int, single}
-import springer.paint.terminal.Parser
-import springer.paint.terminal.Parser._
+import springer.paint.parser.CommonParsers.{int, single}
+import springer.paint.parser.Parser
+import springer.paint.parser.Parser._
 
 /**
   * A plugin that draws rectangles

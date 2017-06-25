@@ -1,5 +1,7 @@
 package springer.paint.app
 
+import springer.paint.app.config.Wiring._
+
 object MainApp extends App {
-    Wiring.app.start()
+    app.start()
 }

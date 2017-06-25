@@ -2,9 +2,9 @@ package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
 import springer.paint.point.Point
-import springer.paint.terminal.CommonParsers._
-import springer.paint.terminal.Parser
-import springer.paint.terminal.Parser._
+import springer.paint.parser.CommonParsers._
+import springer.paint.parser.Parser
+import springer.paint.parser.Parser._
 
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue

@@ -1,13 +1,11 @@
-package springer.paint.terminal
+package springer.paint.parser
 
 import springer.paint.point.Point
-import springer.paint.terminal.Parser.combine
+import springer.paint.parser.Parser.combine
 
 import scala.util.Try
 
 /**
-  * Created by Nicolò Martini <nicolo@martini.io>.
-  *
   * Simple parsers definitions
   */
 object CommonParsers {

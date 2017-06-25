@@ -1,6 +1,6 @@
-package springer.paint.terminal
+package springer.paint.parser
 
-import springer.paint.terminal.CommonParsers._
+import springer.paint.parser.CommonParsers._
 
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.

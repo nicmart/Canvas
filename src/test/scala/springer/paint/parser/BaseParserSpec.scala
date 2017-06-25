@@ -1,4 +1,4 @@
-package springer.paint.terminal
+package springer.paint.parser
 
 import springer.paint.spec.CommonSpec
 

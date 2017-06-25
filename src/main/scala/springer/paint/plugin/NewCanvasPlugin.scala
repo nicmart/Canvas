@@ -2,9 +2,9 @@ package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
 import springer.paint.state.{Initialised, PaintState}
-import springer.paint.terminal.CommonParsers.{positiveInt, single}
-import springer.paint.terminal.Parser
-import springer.paint.terminal.Parser._
+import springer.paint.parser.CommonParsers.{positiveInt, single}
+import springer.paint.parser.Parser
+import springer.paint.parser.Parser._
 
 /**
   * A plugin for the new Canvas command

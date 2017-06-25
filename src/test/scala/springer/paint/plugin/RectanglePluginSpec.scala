@@ -2,7 +2,7 @@ package springer.paint.plugin
 
 import springer.paint.canvas.{Canvas, DrawPoint, DrawSequence}
 import springer.paint.point.Point
-import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
+import springer.paint.parser.{BaseParserSpec, Failure, ParserSpec, Success}
 import DrawSequence._
 
 class RectanglePluginSpec extends BasePluginSpec {

@@ -2,7 +2,7 @@ package springer.paint.plugin
 
 import springer.paint.canvas.{Canvas, CanvasDsl}
 import springer.paint.state.PaintState
-import springer.paint.terminal.Parser
+import springer.paint.parser.Parser
 
 /**
   * With implementation of this trait we can extend behaviour of

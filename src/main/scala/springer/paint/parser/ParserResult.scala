@@ -1,4 +1,4 @@
-package springer.paint.terminal
+package springer.paint.parser
 
 import scala.util.Try
 import scala.util.{Success => TrySuccess, Failure => TryFailure}

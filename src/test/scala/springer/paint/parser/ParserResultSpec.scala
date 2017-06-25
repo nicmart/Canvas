@@ -1,4 +1,4 @@
-package springer.paint.terminal
+package springer.paint.parser
 
 /**
   * Created by Nicolò Martini <nicolo@martini.io>.

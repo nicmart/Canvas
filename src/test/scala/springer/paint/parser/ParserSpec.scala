@@ -1,4 +1,4 @@
-package springer.paint.terminal
+package springer.paint.parser
 import Parser._
 import CommonParsers._
 
@@ -20,15 +20,6 @@ class ParserSpec extends BaseParserSpec {
         "be able to map failures with a function" in {
             successful("a").mapFailure(_ => Success("b")).parse(Nil) shouldBe Success("a", Nil)
             failing("e").mapFailure(_ => Success("b")).parse(Nil) shouldBe Success("b")
-        }
-    }
-
-    "A nested parser" should {
-        "concatenate the parsers when flattened" in {
-            val parser: Parser[Parser[String]] =
-                (tokens: List[String]) => Success(successful(tokens.headOption.getOrElse("")), tokens)
-
-            parser.flatten().parse(List("a", "b")) shouldBe Success("a", List("a", "b"))
         }
     }
 
@@ -86,6 +77,21 @@ class ParserSpec extends BaseParserSpec {
 
             val parser2 = successful("ok").label("error2")
             parser2.parse(Nil) shouldBe Success("ok", Nil)
+        }
+    }
+
+    "A finalised parser" should {
+        "do nothing in case of failure" in {
+            val parser = failing("error1").finalise()
+            parser.parse(Nil) shouldBe Failure("error1")
+        }
+        "fail in case of Success with remaining tokens" in {
+            val parser = successful("ok").finalise("error")
+            parser.parse(List("a")) shouldBe Failure("error")
+        }
+        "succeed in case of Success with no remaining tokens" in {
+            val parser = successful("ok").finalise("error")
+            parser.parse(Nil) shouldBe Success("ok")
         }
     }
 }

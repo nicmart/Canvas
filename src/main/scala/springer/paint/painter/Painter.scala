@@ -3,8 +3,8 @@ package springer.paint.painter
 import springer.paint.painter.Painter.PluginWithDescription
 import springer.paint.plugin.Plugin
 import springer.paint.state.PaintState
-import springer.paint.terminal.{Failure, Parser, Success}
-import springer.paint.terminal.CommonParsers._
+import springer.paint.parser.{Failure, Parser, Success}
+import springer.paint.parser.CommonParsers._
 
 /**
   * Put together the plugins and implement the final parser.

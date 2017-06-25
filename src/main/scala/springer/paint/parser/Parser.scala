@@ -1,4 +1,4 @@
-package springer.paint.terminal
+package springer.paint.parser
 
 /**
   * Parse a list of tokens into something else
@@ -6,7 +6,6 @@ package springer.paint.terminal
   * a parser whose return value is a Paint Command.
   */
 trait Parser[+T] { self =>
-    import Parser._
     /**
       * Transform a list of token into a command parser result
       */
@@ -51,20 +50,20 @@ trait Parser[+T] { self =>
         mapFailure(_ => Failure(error))
 
     /**
+      * Finalise this parser, making it fail if it does not consume
+      * all the tokens
+      */
+    def finalise(error: String = ""): Parser[T] =
+        mapSuccess {
+            case success@Success(value, Nil) => success
+            case _ => Failure(error)
+        }
+
+    /**
       * Make the parser fail if the parsed result does not match the predicate
       */
     def filter(predicate: T => Boolean, message: String = ""): Parser[T] =
         mapSuccess { success => if (predicate(success.value)) success else Failure(message) }
-
-    /**
-      * Flatten a parser of parser of S into a parser of S
-      */
-    def flatten[S](failure: Option[Failure] = None)
-        (implicit ev: T <:< Parser[S]): Parser[S] =
-        (tokens: List[String]) => self.parse(tokens) match {
-            case Success(parser, tail) => parser.parse(tail)
-            case innerFailure@Failure(_) => failure.getOrElse(innerFailure)
-        }
 }
 
 object Parser {

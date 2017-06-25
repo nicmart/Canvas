@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
+import springer.paint.parser.{BaseParserSpec, Failure, ParserSpec, Success}
 import springer.paint.canvas.{Canvas, DrawPoint, DrawSequence}
 import springer.paint.point.Point
 

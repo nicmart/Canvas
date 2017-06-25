@@ -1,9 +1,9 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
-import springer.paint.terminal.CommonParsers._
+import springer.paint.parser.CommonParsers._
 import springer.paint.point.Point
-import springer.paint.terminal.{BaseParserSpec, Failure, Success}
+import springer.paint.parser.{BaseParserSpec, Failure, Success}
 
 class FillPluginSpec extends BasePluginSpec {
     val plugin = FillPlugin(char)
