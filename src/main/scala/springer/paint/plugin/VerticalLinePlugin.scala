@@ -20,6 +20,17 @@ object VerticalLinePlugin extends CanvasFreePlugin[Char, String] {
     type Command = VerticalLine
 
     /**
+      * Return some help about this command
+      *
+      * @param commandSymbol The symbol this plugin is registered to in the painter
+      */
+    def description(commandSymbol: String): String =
+        s"""
+           |Vertical Line command: draw an horizontal line
+           |Format: $commandSymbol x1 y1 x2 y2, where x1 = x2
+         """.stripMargin.trim
+
+    /**
       * Interpret a Vertical Line as a CanvasDsl expression
       */
     override def toCanvasDsl(line: VerticalLine): CanvasDsl[Char] = {

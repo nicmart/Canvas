@@ -14,6 +14,17 @@ final case class QuitPlugin[In, Out]() extends Plugin[In, Out] {
     type Command = Quit.type
 
     /**
+      * Return some help about this command
+      *
+      * @param commandSymbol The symbol this plugin is registered to in the painter
+      */
+    def description(commandSymbol: String): String =
+        s"""
+           |Quit command: exit
+           |Format: $commandSymbol
+         """.stripMargin.trim
+
+    /**
       * Interpret the command
       */
     def interpret(command: Quit.type, state: State): State =

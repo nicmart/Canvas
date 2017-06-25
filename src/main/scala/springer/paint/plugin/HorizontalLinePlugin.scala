@@ -18,8 +18,16 @@ object HorizontalLinePlugin extends CanvasFreePlugin[Char, String] {
       */
     type Command = HorizontalLine
 
-    override def description: String =
-        "Draw an horizontal line. Format: L x1 y1 "
+    /**
+      * Return some help about this command
+      *
+      * @param commandSymbol The symbol this plugin is registered to in the painter
+      */
+    def description(commandSymbol: String): String =
+        s"""
+           |Horizontal Line command: draw an horizontal line
+           |Format: $commandSymbol x1 y1 x2 y2, where y1 = y2
+         """.stripMargin.trim
 
     override def toCanvasDsl(line: HorizontalLine): CanvasDsl[Char] = {
         val actions = Plugin.range(line.fromX, line.toX).map {

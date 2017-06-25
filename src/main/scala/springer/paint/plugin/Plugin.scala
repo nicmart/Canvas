@@ -30,8 +30,12 @@ trait Plugin[In, Out] {
       */
     def commandParser: Parser[Command]
 
-    def error: String = "Invalid format"
-    def description: String = "Invalid format"
+    /**
+      * Return some help about this command
+      *
+      * @param commandSymbol The symbol this plugin is registered to in the painter
+      */
+    def description(commandSymbol: String): String
 
     /**
       * Parse user input and translate to a new state

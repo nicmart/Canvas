@@ -16,6 +16,17 @@ object NewCanvasPlugin extends Plugin[Char, String] {
     type Command = NewCanvas
 
     /**
+      * Return some help about this command
+      *
+      * @param commandSymbol The symbol this plugin is registered to in the painter
+      */
+    def description(commandSymbol: String): String =
+        s"""
+           |New Canvas command: draw an horizontal line
+           |Format: $commandSymbol w h, where w and h are positive integers
+         """.stripMargin.trim
+
+    /**
       * Interpret the command
       */
     def interpret(command: NewCanvas, state: PaintState[Char, String]): PaintState[Char, String] =

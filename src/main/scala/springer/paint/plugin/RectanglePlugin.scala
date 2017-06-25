@@ -18,6 +18,17 @@ object RectanglePlugin extends CanvasFreePlugin[Char, String] {
       */
     type Command = Rectangle
 
+    /**
+      * Return some help about this command
+      *
+      * @param commandSymbol The symbol this plugin is registered to in the painter
+      */
+    def description(commandSymbol: String): String =
+        s"""
+           |Rectangle command: draw a rectangle
+           |Format: $commandSymbol x1 y1 x2 y2
+         """.stripMargin.trim
+
 
     def toCanvasDsl(rect: Rectangle): CanvasDsl[Char] = {
         val Rectangle(Point(x1, y1), Point(x2, y2)) = rect

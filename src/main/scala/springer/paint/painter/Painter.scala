@@ -14,13 +14,16 @@ import springer.paint.terminal.CommonParsers._
 final case class Painter[In, Out] private (
     plugins: Map[String, List[PluginWithDescription[In, Out]]]
 ) {
+    /**
+      * A transition between PaintStates
+      */
     type StateTransition = PaintState[In, Out] => PaintState[In, Out]
 
     /**
       * Register a new plugin with the given symbol
       */
-    def addPlugin(symbol: String, plugin: Plugin[In, Out], desc: String): Painter[In, Out] = {
-        val pluginWithDesc = PluginWithDescription(plugin, desc)
+    def addPlugin(symbol: String, plugin: Plugin[In, Out]): Painter[In, Out] = {
+        val pluginWithDesc = PluginWithDescription(plugin, plugin.description(symbol))
         val newPlugins = plugins.updated(symbol, pluginWithDesc :: plugins.getOrElse(symbol, Nil))
         Painter(newPlugins)
     }
@@ -39,7 +42,7 @@ final case class Painter[In, Out] private (
         parser.parse(input.split(" ").toList) match {
             case Success(transition, _) => transition(state)
             case Failure(msg) =>
-                state.addOutput("Invalid Command").addOutput(msg)
+                state.addOutput(msg)
         }
 
     private def commandParser: Parser[List[PluginWithDescription[In, Out]]] = {
@@ -48,14 +51,18 @@ final case class Painter[In, Out] private (
 
     private def sameCommandParser(ps: List[PluginWithDescription[In, Out]]): Parser[StateTransition] = {
         val descriptions = ps.map(_.description).mkString("\n")
-        ps.foldLeft[Parser[StateTransition]](failing()) { (parser, pluginWithDesc) =>
+        val parser = ps.foldLeft[Parser[StateTransition]](failing()) { (parser, pluginWithDesc) =>
             val pluginParser = pluginWithDesc.plugin.parser.label(descriptions)
             parser or pluginParser
         }
+        parser.mapFailure { case Failure(msg) => Failure(commandMalformedString + "\n" + msg) }
     }
 
     private val commandNotAvailableString =
         "Command not available"
+
+    private val commandMalformedString =
+        "The command you entered was malformed.\nProbably you meant:"
 }
 
 object Painter {

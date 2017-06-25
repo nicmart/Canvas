@@ -13,6 +13,17 @@ object FillPlugin extends CanvasPlugin[Char, String] {
     final case class Fill(from: Point, input: Char)
 
     /**
+      * Return some help about this command
+      *
+      * @param commandSymbol The symbol this plugin is registered to in the painter
+      */
+    def description(commandSymbol: String): String =
+        s"""
+           |Bucket fill command: fill an area with a specific character {c}
+           |Format: $commandSymbol x y {c}
+        """.stripMargin.trim
+
+    /**
       * The type of the new Command
       */
     type Command = Fill
