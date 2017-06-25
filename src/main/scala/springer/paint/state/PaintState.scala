@@ -4,13 +4,12 @@ import springer.paint.canvas.Canvas
 
 import scala.collection.immutable.Queue
 
+/**
+  * An ADT for paint state.
+  *
+  * PaintState is a closed list of states
+  */
 sealed trait PaintState[+In] {
-    /**
-      * Set the canvas in the state
-      */
-    def withCanvas[In2 >: In](canvas: Canvas[In2]): PaintState[In2] =
-        Initialised(canvas)
-
     /**
       * Tell if the state is initialised, i.e. if  we have a canvas
       */
@@ -54,9 +53,24 @@ sealed trait PaintState[+In] {
     }
 }
 
+/**
+  * The initial state of the app, when we do not have a canvas yet
+  */
 case object Uninitialised extends PaintState[Nothing]
+
+/**
+  * An initialised state, i.e. a state with a canvas
+  */
 final case class Initialised[In](canvas: Canvas[In]) extends PaintState[In]
+
+/**
+  * The final state, after which the program halts
+  */
 case object Final extends PaintState[Nothing]
+
+/**
+  * Output state, in which there is some output to print
+  */
 final case class Output[In](messages: Queue[String], state: PaintState[In]) extends PaintState[In]
 
 

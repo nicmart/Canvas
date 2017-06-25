@@ -36,7 +36,7 @@ final case class Painter[In] private (
       * Given the input and a state, it returns the new state
       */
     def run(state: PaintState[In], input: String): PaintState[In] =
-        parser.parse(input.split(" ").toList) match {
+        parser.parse(input.split(" +").toList) match {
             case Success(transition, _) => transition(state)
             case Failure(msg) =>
                 state.addOutput(msg)

@@ -12,12 +12,12 @@ class PainterSpec extends BasePluginSpec {
         val initialState = Uninitialised
 
         "give the parser that returns the transition of the plugin that matches the input" in {
-            val state = painter.run(initialState, "P world")
+            val state = painter.run(initialState, "P    world")
             state.consumeOutput._2 shouldBe Final
         }
 
         "fail if no plugin matches the input" in {
-            val state = painter.run(initialState, "P missing")
+            val state = painter.run(initialState, "P  missing")
             state.consumeOutput._2 shouldBe initialState
         }
 
