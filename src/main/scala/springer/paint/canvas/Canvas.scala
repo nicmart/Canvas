@@ -5,7 +5,7 @@ import springer.paint.point.Point
 /**
   * Low-level Canvas Type. Provide only drawPoint primitive.
   */
-case class Canvas[+In] (
+final case class Canvas[+In] (
     width: Int,
     height: Int,
     pixels: IndexedSeq[IndexedSeq[In]]
@@ -59,6 +59,10 @@ case class Canvas[+In] (
 }
 
 object Canvas {
+    /**
+      * Return a canvas of the given size, whose pixels are all filled
+      * with <code>input</code>
+      */
     def filled[In](width: Int, height: Int, input: In): Canvas[In] =
         Canvas(width, height, IndexedSeq.fill(height, width)(input))
 }

@@ -37,12 +37,6 @@ object CommonParsers {
         first.filter(_ == token)
 
     /**
-      * A parser that parses a single token
-      */
-    def single[T](token: String, parsed: T): Parser[T] =
-        matchFirst(token).map(_ => parsed)
-
-    /**
       * Parse the first token, expecting it to be a single char
       */
     val char: Parser[Char] =
@@ -66,12 +60,6 @@ object CommonParsers {
       */
     val positiveInt: Parser[Int] =
         int.filter(_ > 0)
-
-    /**
-      * Parse an integer in a range
-      */
-    def rangeInt(from: Int, to: Int): Parser[Int] =
-        int.filter(n => n >= from && n <= to)
 
     def point: Parser[Point] =
         combine(int, int)(Point)

@@ -2,7 +2,7 @@ package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
 import springer.paint.state.{Initialised, PaintState}
-import springer.paint.parser.CommonParsers.{positiveInt, single}
+import springer.paint.parser.CommonParsers.positiveInt
 import springer.paint.parser.Parser
 import springer.paint.parser.Parser._
 

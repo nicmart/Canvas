@@ -26,13 +26,13 @@ class ParserSpec extends BaseParserSpec {
     "A sequence parser" should {
         "parse a sequence of elements and return them in a list" in {
             val tokens = tokenize("10 a 40")
-            val expected = Success(List(10, 11), List("40"))
-            sequence[Int](int, single("a", 11)).parse(tokens) shouldBe expected
+            val expected = Success(List(10, "a"), List("40"))
+            sequence[Any](int, matchFirst("a")).parse(tokens) shouldBe expected
         }
 
         "fail when an element int the sequence is unparsable" in {
             val tokens = tokenize("10 b aaa 40")
-            inside(sequence(int, single("a", 10)).parse(tokens)) {
+            inside(sequence(int, matchFirst("a")).parse(tokens)) {
                 case Failure(_) =>
             }
         }

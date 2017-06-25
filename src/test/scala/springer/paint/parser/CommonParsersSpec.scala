@@ -6,22 +6,24 @@ import springer.paint.parser.CommonParsers._
   * Created by Nicolò Martini <nicolo@martini.io>.
   */
 class CommonParsersSpec extends BaseParserSpec{
-    "A Single token parser" should {
-        "parse the first token by exact match" in {
-            val parser = single("a", 123)
-            parser.parse(List("a", "b", "c")) shouldBe Success(123, List("b", "c"))
-            inside(parser.parse(List("x", "b", "c"))) {
-                case Failure(_) =>
-            }
-        }
-    }
-
     "`first` parser" should {
         "return the first token" in {
             first.parse(tokenize("hello world")) shouldBe Success("hello", List("world"))
         }
         "fail if no tokens available" in {
             inside(first.parse(Nil)) { case Failure(_) => }
+        }
+    }
+
+    "`matchFirst` parser" should {
+        "succed if the first token is the same as the one provided" in {
+            matchFirst("hello").parse(tokenize("hello world")) shouldBe Success("hello", List("world"))
+        }
+        "fail if the first token does not match" in {
+            inside(matchFirst("hello").parse(List("hi"))) { case Failure(_) => }
+        }
+        "fail if no tokens available" in {
+            inside(matchFirst("hello").parse(Nil)) { case Failure(_) => }
         }
     }
 

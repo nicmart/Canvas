@@ -54,7 +54,11 @@ trait CanvasFreePlugin[In] extends Plugin[In] {
       */
     def toCanvasDsl(command: Command): CanvasDsl[In]
 
-    override def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
+    /**
+      * Interpret the command
+      */
+    override
+    def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
         if (state.isInitialised) {
             state.mapCanvas(_.run(toCanvasDsl(command)))
         } else {
@@ -72,7 +76,11 @@ trait CanvasPlugin[In] extends Plugin[In] {
       */
     def transformCanvas[In2 >: In](command: Command, canvas: Canvas[In2]): Canvas[In2]
 
-    override def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
+    /**
+      * Interpret the command
+      */
+    override
+    def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
         if (state.isInitialised) {
             state.mapCanvas[In2](canvas => transformCanvas(command, canvas))
         } else {
@@ -83,7 +91,7 @@ trait CanvasPlugin[In] extends Plugin[In] {
 
 object Plugin {
     /**
-      * A range where the elements can be given in any order
+      * A range of ints where the elements can be given in any order
       */
     def range(start: Int, end: Int): Range = {
         if (start <= end) {

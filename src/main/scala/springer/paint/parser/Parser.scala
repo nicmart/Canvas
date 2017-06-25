@@ -2,7 +2,7 @@ package springer.paint.parser
 
 /**
   * Parse a list of tokens into something else
-  * This will at the end be used to expose a CommandParser[PaintDsl], i.e.
+  * This will at the end be used to expose a
   * a parser whose return value is a Paint Command.
   */
 trait Parser[+T] { self =>
@@ -89,11 +89,8 @@ object Parser {
     /**
       * Combine the result of two successful parsers
       */
-    def combine[T, S, U](
-        parser1: Parser[T],
-        parser2: Parser[S])(
-        f: (T, S) => U
-    ): Parser[U] = {
+    def combine[T, S, U](parser1: Parser[T], parser2: Parser[S])
+        (f: (T, S) => U): Parser[U] = {
         parser1.mapSuccess { success =>
             parser2.parse(success.tail).map(f(success.value, _))
         }

@@ -2,7 +2,7 @@ package springer.paint.plugin
 
 import springer.paint.canvas.{Canvas, CanvasDsl, DrawSequence}
 import springer.paint.point.Point
-import springer.paint.parser.CommonParsers.{int, single}
+import springer.paint.parser.CommonParsers.int
 import springer.paint.parser.Parser
 import springer.paint.parser.Parser._
 
