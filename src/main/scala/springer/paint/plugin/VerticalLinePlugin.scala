@@ -25,7 +25,7 @@ case class VerticalLinePlugin[In](symbol: In) extends CanvasFreePlugin[In] {
       */
     def description(commandSymbol: String): String =
         s"""
-           |Vertical Line command: draw an horizontal line
+           |Vertical Line command: draw a vertical line
            |Format: $commandSymbol x1 y1 x2 y2, where x1 = x2
          """.stripMargin.trim
 

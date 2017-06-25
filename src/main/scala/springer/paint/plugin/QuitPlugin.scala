@@ -31,7 +31,7 @@ object QuitPlugin extends Plugin[Nothing] {
       * Interpret the command
       */
     override def interpret[In2 >: Nothing](command: Quit.type, state: PaintState[In2]): PaintState[In2] =
-        Final
+        Final.addOutput("Bye!")
 
     /**
       * Parse an user input into this command

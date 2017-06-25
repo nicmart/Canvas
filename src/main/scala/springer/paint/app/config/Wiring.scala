@@ -1,6 +1,6 @@
 package springer.paint.app.config
 
-import springer.paint.canvas.Canvas
+import springer.paint.canvas.{BorderCanvasRenderer, Canvas}
 import springer.paint.painter.Painter
 import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.plugin.{FillPlugin, HorizontalLinePlugin, RectanglePlugin, VerticalLinePlugin, _}
@@ -8,7 +8,8 @@ import springer.paint.terminal.CommonParsers._
 
 trait Wiring {
     type DefaultPaintState = PaintState[Char]
-    lazy val initialState = Uninitialised
+    lazy val welcome = "Welcome to painter!"
+    lazy val initialState = Uninitialised.addOutput(welcome)
 
     // Default symbols for lines and white pixels
     lazy val lineSymbol = 'x'
@@ -32,6 +33,9 @@ trait Wiring {
         .addPlugin("R", rectanglePlugin)
         .addPlugin("B", fillPlugin)
         .addPlugin("Q", quitPlugin)
+
+    lazy val renderer = BorderCanvasRenderer('-', '|', '-', '-', '-', '-')
+    lazy val app = PaintApp(initialState, painter, renderer)
 }
 
 object Wiring extends Wiring
