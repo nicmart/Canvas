@@ -28,7 +28,7 @@ final case class QuitPlugin[In]() extends Plugin[In] {
       * Interpret the command
       */
     def interpret(command: Quit.type, state: State): State =
-        Final()
+        Final
 
     /**
       * Parse an user input into this command

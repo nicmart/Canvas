@@ -20,7 +20,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             val painter = Wiring.painter
 
             Given("An initial state")
-            var currentState: DefaultPaintState = Uninitialised[Char]()
+            var currentState: DefaultPaintState = Uninitialised
 
             When("the user creates a new canvas 20x10")
             currentState = painter.run(currentState, "C 20 10")
@@ -36,7 +36,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             val painter = Wiring.painter
 
             Given("An initial state")
-            var currentState: DefaultPaintState = Uninitialised[Char]()
+            var currentState: DefaultPaintState = Uninitialised
 
             Given("the user has created a new canvas 20x10")
             currentState = painter.run(currentState, "C 20 10")

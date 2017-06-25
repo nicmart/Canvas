@@ -26,13 +26,13 @@ class QuitPluginSpec extends BasePluginSpec {
         val interpreter = plugin.interpret _
         val command = plugin.Quit
         "finalise an uninitialised state" in {
-            val start: plugin.State = Uninitialised()
-            val expected = Final()
+            val start: plugin.State = Uninitialised
+            val expected = Final
             interpreter(command, start) shouldBe expected
         }
         "finalise an initialised state" in {
             val start: plugin.State = Initialised(Canvas.filled(10, 10, ' '))
-            val expected = Final()
+            val expected = Final
             interpreter(command, start) shouldBe expected
         }
     }

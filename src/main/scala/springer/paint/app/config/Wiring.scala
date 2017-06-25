@@ -8,7 +8,7 @@ import springer.paint.terminal.CommonParsers._
 
 trait Wiring {
     type DefaultPaintState = PaintState[Char]
-    lazy val initialState = Uninitialised[Char]()
+    lazy val initialState = Uninitialised
 
     // Default symbols for lines and white pixels
     lazy val lineSymbol = 'x'

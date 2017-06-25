@@ -4,11 +4,11 @@ import springer.paint.canvas.Canvas
 
 import scala.collection.immutable.Queue
 
-sealed trait PaintState[In] {
+sealed trait PaintState[+In] {
     /**
       * Set the canvas in the state
       */
-    def withCanvas(canvas: Canvas[In]): PaintState[In] =
+    def withCanvas[In2 >: In](canvas: Canvas[In2]): PaintState[In2] =
         Initialised(canvas)
 
     /**
@@ -24,14 +24,14 @@ sealed trait PaintState[In] {
       * Tell if the state is the final state
       */
     def isFinal: Boolean = this match {
-        case Final() => true
+        case Final => true
         case _ => false
     }
 
     /**
       * Apply a transformation to a canvas, if we are in an initialised state
       */
-    def mapCanvas(f: Canvas[In] => Canvas[In]): PaintState[In] = this match {
+    def mapCanvas[In2 >: In](f: Canvas[In] => Canvas[In2]): PaintState[In2] = this match {
         case Initialised(canvas) => Initialised(f(canvas))
         case Output(messages, state) => Output(messages, state.mapCanvas(f))
         case _ => this
@@ -54,9 +54,9 @@ sealed trait PaintState[In] {
     }
 }
 
-final case class Uninitialised[In]() extends PaintState[In]
+case object Uninitialised extends PaintState[Nothing]
 final case class Initialised[In](canvas: Canvas[In]) extends PaintState[In]
-final case class Final[In]() extends PaintState[In]
+case object Final extends PaintState[Nothing]
 final case class Output[In](messages: Queue[String], state: PaintState[In]) extends PaintState[In]
 
 
