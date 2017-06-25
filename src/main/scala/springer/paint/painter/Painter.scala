@@ -7,9 +7,12 @@ import springer.paint.parser.{Failure, Parser, Success}
 import springer.paint.parser.CommonParsers._
 
 /**
-  * Put together the plugins and implement the final parser.
+  * Put together the plugins and implement the final parser,
+  * that translate the user input to a PaintState transition.
+  *
   * This object cannot be created directly, but through the empty method
-  * in the companion object.
+  * in the companion object. Plugins can then be added with the
+  * `addPlugin` method.
   */
 final case class Painter[In] private (
     plugins: Map[String, List[PluginWithDescription[In]]]
@@ -24,19 +27,13 @@ final case class Painter[In] private (
       */
     def addPlugin(symbol: String, plugin: Plugin[In]): Painter[In] = {
         val pluginWithDesc = PluginWithDescription(plugin, plugin.description(symbol))
-        val newPlugins = plugins.updated(symbol, pluginWithDesc :: plugins.getOrElse(symbol, Nil))
+        val pluginsForThisSymbol = pluginWithDesc :: plugins.getOrElse(symbol, Nil)
+        val newPlugins = plugins.updated(symbol, pluginsForThisSymbol)
         Painter(newPlugins)
     }
 
     /**
-      * An OR between all plugin parsers
-      */
-    def parser: Parser[StateTransition] = {
-        commandParser.andThen(sameCommandParser)
-    }
-
-    /**
-      * Parse the input and update the state
+      * Given the input and a state, it returns the new state
       */
     def run(state: PaintState[In], input: String): PaintState[In] =
         parser.parse(input.split(" ").toList) match {
@@ -45,10 +42,25 @@ final case class Painter[In] private (
                 state.addOutput(msg)
         }
 
+    /**
+      * An OR between all plugin parsers
+      */
+    private def parser: Parser[StateTransition] = {
+        commandParser.andThen(sameCommandParser)
+    }
+
+    /**
+      * A parser that consumes only the command symbol, and returns
+      * the list of possible plugins
+      */
     private def commandParser: Parser[List[PluginWithDescription[In]]] = {
         first.map(plugins).label(commandNotAvailableString)
     }
 
+    /**
+      * Given a list of plugins, return a parser that will parse the ramaining
+      * part of the command and return the State Transition of the matching plugin
+      */
     private def sameCommandParser(ps: List[PluginWithDescription[In]]): Parser[StateTransition] = {
         val descriptions = ps.map(_.description).mkString("\n")
         val parser = ps.foldLeft[Parser[StateTransition]](failing()) { (parser, pluginWithDesc) =>
@@ -58,9 +70,16 @@ final case class Painter[In] private (
         parser.mapFailure { case Failure(msg) => Failure(commandMalformedString + "\n" + msg) }
     }
 
+    /**
+      * Failure string returned when a command is not recognised
+      */
     private val commandNotAvailableString =
         "Command not available"
 
+    /**
+      * Failure string returned when a command is matched but the command
+      * is malformed
+      */
     private val commandMalformedString =
         "The command you entered was malformed.\nProbably you meant:"
 }

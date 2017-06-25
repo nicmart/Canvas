@@ -5,12 +5,13 @@ import springer.paint.state.PaintState
 import springer.paint.parser.Parser
 
 /**
-  * With implementation of this trait we can extend behaviour of
+  * A plugin for our painter.
+  *
+  * With an implementation of this trait we can extend behaviour of
   * our painter, introducing new commands.
   *
   * A command is specified by a type, and it is converted to
-  * the Canvas Dsl through the interpret command.
-  * The new command is then juPluginst syntactic sugar on top of the low-level Canvas Dsl
+  * a Paint State transition through the interpret command.
   *
   * The plugin also provide the parser that translate the user input into the new Command
   */
