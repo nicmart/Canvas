@@ -12,7 +12,7 @@ class CanvasSpec extends CommonSpec {
     "A CharCanvas" must {
         "give an empty canvas when a new one is created" in {
             val canvas = CharCanvas.empty(20, 10)
-            canvas.output shouldBe List.fill(10)(" " * 20).mkString("\n")
+            canvas.pixels shouldBe IndexedSeq.fill(10, 20)(' ')
         }
 
         "draw a character in the right position" in {
@@ -20,7 +20,11 @@ class CanvasSpec extends CommonSpec {
                 .drawPoint(Point(1, 1), 'x')
                 .drawPoint(Point(2, 2), 'o')
                 .drawPoint(Point(4, 3), 'o')
-            canvas.output shouldBe "x   \n o  \n   o"
+            canvas.pixels shouldBe IndexedSeq(
+                IndexedSeq('x', ' ', ' ', ' '),
+                IndexedSeq(' ', 'o', ' ', ' '),
+                IndexedSeq(' ', ' ', ' ', 'o')
+            )
         }
 
         "get the value of a pixel" in {
@@ -35,7 +39,7 @@ class CanvasSpec extends CommonSpec {
             val canvas = CharCanvas.empty(4, 3)
                 .drawPoint(Point(0, 0), 'x')
                 .drawPoint(Point(5, 1), 'o')
-            canvas.output shouldBe "    \n    \n    "
+            canvas shouldBe CharCanvas.empty(4, 3)
         }
 
         "get the neighbours of a point" in {

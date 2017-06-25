@@ -14,7 +14,10 @@ object PaintApp extends App {
         val line = StdIn.readLine("Enter command: ")
         val (output, nextState) = painter.run(state, line).consumeOutput
         if (output.isEmpty) {
-            nextState.mapCanvas(canvas => { println(canvas.output); canvas})
+            nextState.mapCanvas(canvas => {
+                println(canvas.pixels.map(_.mkString("")).mkString("\n"))
+                canvas
+            })
         } else {
             output.foreach(println)
         }

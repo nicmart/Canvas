@@ -112,9 +112,10 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
     }
 
     def assertOutput(state: DefaultPaintState, output: String) = {
+        val pixels = output.split("\n").map(_.toCharArray.toIndexedSeq).toIndexedSeq
         inside(state) {
             case Initialised(canvas) =>
-                assert(canvas.output == output)
+                assert(canvas.pixels == pixels)
         }
     }
 }

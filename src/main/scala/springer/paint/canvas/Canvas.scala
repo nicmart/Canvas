@@ -22,11 +22,6 @@ trait Canvas[In] {
     def drawPoint(position: Point, input: In): Canvas[In]
 
     /**
-      * Get the output of the canvas
-      */
-    def output: String
-
-    /**
       * Return all the pixels
       */
     def pixels: IndexedSeq[IndexedSeq[In]]
@@ -98,9 +93,5 @@ case class CharCanvas(
 
 object CharCanvas {
     def empty(width: Int, height: Int): CharCanvas =
-        CharCanvas(
-            width,
-            height,
-            IndexedSeq.fill(height, width)(' ')
-        )
+        CharCanvas(width, height, IndexedSeq.fill(height, width)(' '))
 }
