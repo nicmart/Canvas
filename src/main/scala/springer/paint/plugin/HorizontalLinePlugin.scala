@@ -9,7 +9,7 @@ import springer.paint.terminal.{Failure, Parser, Success}
 /**
   * Draw horizontal lines
   */
-object HorizontalLinePlugin extends CanvasFreePlugin[Char] {
+case class HorizontalLinePlugin[In](symbol: In) extends CanvasFreePlugin[In] {
 
     final case class HorizontalLine(y: Int, fromX: Int, toX: Int)
 
@@ -29,9 +29,9 @@ object HorizontalLinePlugin extends CanvasFreePlugin[Char] {
            |Format: $commandSymbol x1 y1 x2 y2, where y1 = y2
          """.stripMargin.trim
 
-    override def toCanvasDsl(line: HorizontalLine): CanvasDsl[Char] = {
+    override def toCanvasDsl(line: HorizontalLine): CanvasDsl[In] = {
         val actions = Plugin.range(line.fromX, line.toX).map {
-            x => DrawPoint(Point(x, line.y), 'x')
+            x => DrawPoint(Point(x, line.y), symbol)
         }
         DrawSequence(actions.toList)
     }

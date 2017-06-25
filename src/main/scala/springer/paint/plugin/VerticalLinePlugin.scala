@@ -1,7 +1,6 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.{Canvas, CanvasDsl, DrawPoint, DrawSequence}
-import springer.paint.plugin.HorizontalLinePlugin.HorizontalLine
 import springer.paint.point.Point
 import springer.paint.terminal.{Failure, Parser, Success}
 import springer.paint.terminal.CommonParsers._
@@ -10,7 +9,7 @@ import springer.paint.terminal.Parser._
 /**
   * Draw vertical lines
   */
-object VerticalLinePlugin extends CanvasFreePlugin[Char] {
+case class VerticalLinePlugin[In](symbol: In) extends CanvasFreePlugin[In] {
 
     final case class VerticalLine(x: Int, fromY: Int, toY: Int)
 
@@ -33,9 +32,9 @@ object VerticalLinePlugin extends CanvasFreePlugin[Char] {
     /**
       * Interpret a Vertical Line as a CanvasDsl expression
       */
-    override def toCanvasDsl(line: VerticalLine): CanvasDsl[Char] = {
+    override def toCanvasDsl(line: VerticalLine): CanvasDsl[In] = {
         val actions = Plugin.range(line.fromY, line.toY).map {
-            y => DrawPoint(Point(line.x, y), 'x')
+            y => DrawPoint(Point(line.x, y), symbol)
         }
         DrawSequence(actions.toList)
     }

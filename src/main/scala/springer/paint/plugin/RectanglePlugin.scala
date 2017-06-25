@@ -6,10 +6,22 @@ import springer.paint.terminal.CommonParsers.{int, single}
 import springer.paint.terminal.Parser
 import springer.paint.terminal.Parser._
 
-object RectanglePlugin extends CanvasFreePlugin[Char] {
+/**
+  * A plugin that draws rectangles
+  *
+  * This is implemented syntactic sugar over horizontal and vertical lines
+  *
+  * @param hPlugin The plugin used to draw horizontal lines
+  * @param vPlugin The plugin used to draw vertical lines
+  * @tparam In
+  */
+case class RectanglePlugin[In](
+    hPlugin: HorizontalLinePlugin[In],
+    vPlugin: VerticalLinePlugin[In]
+) extends CanvasFreePlugin[In] {
 
-    import HorizontalLinePlugin.HorizontalLine
-    import VerticalLinePlugin.VerticalLine
+    import hPlugin.HorizontalLine
+    import vPlugin.VerticalLine
 
     final case class Rectangle(upperLeft: Point, lowerRight: Point)
 
@@ -30,7 +42,7 @@ object RectanglePlugin extends CanvasFreePlugin[Char] {
          """.stripMargin.trim
 
 
-    def toCanvasDsl(rect: Rectangle): CanvasDsl[Char] = {
+    def toCanvasDsl(rect: Rectangle): CanvasDsl[In] = {
         val Rectangle(Point(x1, y1), Point(x2, y2)) = rect
 
         // This is to allow any position of the two points
@@ -38,15 +50,15 @@ object RectanglePlugin extends CanvasFreePlugin[Char] {
         val (minY, maxY) = (Math.min(y1, y2), Math.max(y1, y2))
 
         val commands = if (minX == maxX) {
-            List(VerticalLinePlugin.toCanvasDsl(VerticalLine(minX, minY, maxY)))
+            List(vPlugin.toCanvasDsl(VerticalLine(minX, minY, maxY)))
         } else if (minY == maxY) {
-            List(HorizontalLinePlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX)))
+            List(hPlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX)))
         } else {
             List(
-                HorizontalLinePlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX - 1)),
-                VerticalLinePlugin.toCanvasDsl(VerticalLine(maxX, minY, maxY - 1)),
-                HorizontalLinePlugin.toCanvasDsl(HorizontalLine(maxY, maxX, minX + 1)),
-                VerticalLinePlugin.toCanvasDsl(VerticalLine(minX, maxY, minY + 1))
+                hPlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX - 1)),
+                vPlugin.toCanvasDsl(VerticalLine(maxX, minY, maxY - 1)),
+                hPlugin.toCanvasDsl(HorizontalLine(maxY, maxX, minX + 1)),
+                vPlugin.toCanvasDsl(VerticalLine(minX, maxY, minY + 1))
             )
         }
         DrawSequence(commands)

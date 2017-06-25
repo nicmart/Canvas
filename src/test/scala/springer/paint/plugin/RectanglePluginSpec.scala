@@ -1,18 +1,17 @@
 package springer.paint.plugin
 
-import RectanglePlugin.Rectangle
 import springer.paint.canvas.{Canvas, DrawPoint, DrawSequence}
 import springer.paint.point.Point
 import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 import DrawSequence._
 
 class RectanglePluginSpec extends BasePluginSpec {
-    val plugin = RectanglePlugin
+    val plugin = RectanglePlugin(HorizontalLinePlugin('x'), VerticalLinePlugin('x'))
     "The parser of a rectangle plugin" should {
         val parser = plugin.commandParser
         "parse a valid rectangle" in {
             val tokens = tokenize("0 0 10 5")
-            val expected = Rectangle(Point(0, 0), Point(10, 5))
+            val expected = plugin.Rectangle(Point(0, 0), Point(10, 5))
             parser.parse(tokens) shouldBe Success(expected, Nil)
         }
 
@@ -30,7 +29,7 @@ class RectanglePluginSpec extends BasePluginSpec {
         val interpreter = plugin.toCanvasDsl _
         val canvas = Canvas.filled(30, 10, ' ')
         "draw a rectangle as a sequence of points" in {
-            val command = Rectangle(Point(0, 0), Point(1, 1))
+            val command = plugin.Rectangle(Point(0, 0), Point(1, 1))
             val expected = DrawSequence(List(
                 DrawPoint(Point(0, 0), 'x'),
                 DrawPoint(Point(1, 0), 'x'),
@@ -41,7 +40,7 @@ class RectanglePluginSpec extends BasePluginSpec {
         }
 
         "draw a rectangle even if it is upside down" in {
-            val command = Rectangle(Point(1, 1), Point(0, 0))
+            val command = plugin.Rectangle(Point(1, 1), Point(0, 0))
             val expected = DrawSequence(List(
                 DrawPoint(Point(0, 0), 'x'),
                 DrawPoint(Point(1, 0), 'x'),
@@ -52,7 +51,7 @@ class RectanglePluginSpec extends BasePluginSpec {
         }
 
         "draw a degenerate rectangle as a single point" in {
-            val command = Rectangle(Point(0, 0), Point(0, 0))
+            val command = plugin.Rectangle(Point(0, 0), Point(0, 0))
             val expected = DrawPoint(Point(0, 0), 'x')
             flatten(interpreter(command)) shouldBe expected
         }
