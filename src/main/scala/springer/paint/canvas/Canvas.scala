@@ -5,31 +5,31 @@ import springer.paint.point.Point
 /**
   * Low-level Canvas Type. Provide only drawPoint primitive.
   */
-trait Canvas[In] {
+case class Canvas[In] (
+    width: Int,
+    height: Int,
+    pixels: IndexedSeq[IndexedSeq[In]]
+) {
     /**
-      * Canvas width
+      * Draw a point on a canvas
       */
-    def width: Int
+    def drawPoint(position: Point, input: In): Canvas[In] = {
+        if (isPointInCanvas(position)) {
+            val newRow = pixels(position.y - 1).updated(position.x - 1, input)
+            val newPixels = pixels.updated(position.y - 1, newRow)
+            copy(pixels = newPixels)
+        } else this
+    }
 
     /**
-      * Canvas height
+      * Return the value at a given point
       */
-    def height: Int
-
-    /**
-      * Draw a point on the canvas
-      */
-    def drawPoint(position: Point, input: In): Canvas[In]
-
-    /**
-      * Return all the pixels
-      */
-    def pixels: IndexedSeq[IndexedSeq[In]]
-
-    /**
-      * Get the value of a pixel on the canvas
-      */
-    def valueAt(position: Point): Option[In]
+    def valueAt(position: Point): Option[In] =
+        if (isPointInCanvas(position)) {
+            Some(pixels(position.y - 1)(position.x - 1))
+        } else {
+            None
+        }
 
     /**
       * Get the neighbours of a point
@@ -58,40 +58,7 @@ trait Canvas[In] {
         }
 }
 
-/**
-  * A Canvas type whose input is a char and ouput a String
-  */
-case class CharCanvas(
-    width: Int,
-    height: Int,
-    pixels: IndexedSeq[IndexedSeq[Char]]
-) extends Canvas[Char] {
-    /**
-      * Draw a point on a canvas
-      */
-    def drawPoint(position: Point, input: Char): Canvas[Char] = {
-        if (isPointInCanvas(position)) {
-            val newRow = pixels(position.y - 1).updated(position.x - 1, input)
-            val newPixels = pixels.updated(position.y - 1, newRow)
-            copy(pixels = newPixels)
-        } else this
-    }
-
-    def output: String = {
-//        val line = "-" * (width + 2)
-//        (line +:  pixels.map("|" + _ + "|") :+ line).mkString("\n")
-        pixels.map(_.mkString("")).mkString("\n")
-    }
-
-    def valueAt(position: Point): Option[Char] =
-        if (isPointInCanvas(position)) {
-            Some(pixels(position.y - 1)(position.x - 1))
-        } else {
-            None
-        }
-}
-
-object CharCanvas {
-    def empty(width: Int, height: Int): CharCanvas =
-        CharCanvas(width, height, IndexedSeq.fill(height, width)(' '))
+object Canvas {
+    def filled[In](width: Int, height: Int, input: In): Canvas[In] =
+        Canvas(width, height, IndexedSeq.fill(height, width)(input))
 }

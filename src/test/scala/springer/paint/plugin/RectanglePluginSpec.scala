@@ -1,7 +1,7 @@
 package springer.paint.plugin
 
 import RectanglePlugin.Rectangle
-import springer.paint.canvas.{CharCanvas, DrawPoint, DrawSequence}
+import springer.paint.canvas.{Canvas, DrawPoint, DrawSequence}
 import springer.paint.point.Point
 import springer.paint.terminal.{BaseParserSpec, Failure, ParserSpec, Success}
 import DrawSequence._
@@ -28,7 +28,7 @@ class RectanglePluginSpec extends BasePluginSpec {
 
     "The interpreter of an rectangle plugin" should {
         val interpreter = plugin.toCanvasDsl _
-        val canvas = CharCanvas.empty(30, 10)
+        val canvas = Canvas.filled(30, 10, ' ')
         "draw a rectangle as a sequence of points" in {
             val command = Rectangle(Point(0, 0), Point(1, 1))
             val expected = DrawSequence(List(

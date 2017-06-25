@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.CharCanvas
+import springer.paint.canvas.Canvas
 import springer.paint.state.{Initialised, PaintState}
 import springer.paint.terminal.CommonParsers.{positiveInt, single}
 import springer.paint.terminal.Parser
@@ -30,7 +30,7 @@ object NewCanvasPlugin extends Plugin[Char] {
       * Interpret the command
       */
     def interpret(command: NewCanvas, state: PaintState[Char]): PaintState[Char] =
-        Initialised(CharCanvas.empty(command.width, command.height))
+        Initialised(Canvas.filled(command.width, command.height, ' '))
 
     /**
       * Parse an user input into this command

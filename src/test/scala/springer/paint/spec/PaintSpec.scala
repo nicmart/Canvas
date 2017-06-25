@@ -2,7 +2,7 @@ package springer.paint.spec
 
 import org.scalatest.{FeatureSpec, GivenWhenThen, Inside, Matchers}
 import springer.paint.app.config.Wiring
-import springer.paint.canvas.CharCanvas
+import springer.paint.canvas.Canvas
 import springer.paint.state.{Initialised, PaintState, Uninitialised}
 
 
@@ -54,7 +54,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             val painter = Wiring.painter
 
             Given("An initial canvas")
-            var currentState: DefaultPaintState = Initialised(CharCanvas.empty(4, 2))
+            var currentState: DefaultPaintState = Initialised(Canvas.filled(4, 2, ' '))
 
             When("the user draws an horizontal line")
             currentState = painter.run(currentState, "L 1 2 3 2")
@@ -69,7 +69,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             val painter = Wiring.painter
 
             Given("An initial canvas")
-            var currentState: DefaultPaintState = Initialised(CharCanvas.empty(2, 4))
+            var currentState: DefaultPaintState = Initialised(Canvas.filled(2, 4, ' '))
 
             When("the user draws an horizontal line")
             currentState = painter.run(currentState, "L 2 1 2 3")
@@ -84,7 +84,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             val painter = Wiring.painter
 
             Given("An initial canvas")
-            var currentState: DefaultPaintState = Initialised(CharCanvas.empty(5, 5))
+            var currentState: DefaultPaintState = Initialised(Canvas.filled(5, 5, ' '))
 
             When("the user draws a rectangle")
             currentState = painter.run(currentState, "R 2 2 4 4")
@@ -99,7 +99,7 @@ class PaintSpec extends FeatureSpec with GivenWhenThen with Matchers with Inside
             val painter = Wiring.painter
 
             Given("An initial canvas")
-            var currentState: DefaultPaintState = Initialised(CharCanvas.empty(5, 5))
+            var currentState: DefaultPaintState = Initialised(Canvas.filled(5, 5, ' '))
 
             When("the user draws a line")
             currentState = painter.run(currentState, "L 3 1 3 5")

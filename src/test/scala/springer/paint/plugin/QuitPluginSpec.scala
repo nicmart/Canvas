@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.CharCanvas
+import springer.paint.canvas.Canvas
 import springer.paint.state.{Final, Initialised, Uninitialised}
 import springer.paint.terminal.{Failure, ParserSpec, Success}
 
@@ -31,7 +31,7 @@ class QuitPluginSpec extends BasePluginSpec {
             interpreter(command, start) shouldBe expected
         }
         "finalise an initialised state" in {
-            val start: NewCanvasPlugin.State = Initialised(CharCanvas.empty(10, 10))
+            val start: NewCanvasPlugin.State = Initialised(Canvas.filled(10, 10, ' '))
             val expected = Final()
             interpreter(command, start) shouldBe expected
         }

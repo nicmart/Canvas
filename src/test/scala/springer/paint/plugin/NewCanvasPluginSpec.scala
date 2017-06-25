@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.CharCanvas
+import springer.paint.canvas.Canvas
 import springer.paint.plugin.FillPlugin.Fill
 import springer.paint.plugin.NewCanvasPlugin.NewCanvas
 import springer.paint.point.Point
@@ -44,12 +44,12 @@ class NewCanvasPluginSpec extends BasePluginSpec {
         val command = NewCanvas(30, 10)
         "initialise an un-initialised state" in {
             val start: NewCanvasPlugin.State = Uninitialised()
-            val expected = Initialised(CharCanvas.empty(30, 10))
+            val expected = Initialised(Canvas.filled(30, 10, ' '))
             interpreter(command, start) shouldBe expected
         }
         "replace an initialised state" in {
-            val start: NewCanvasPlugin.State = Initialised(CharCanvas.empty(10, 10))
-            val expected = Initialised(CharCanvas.empty(30, 10))
+            val start: NewCanvasPlugin.State = Initialised(Canvas.filled(10, 10, ' '))
+            val expected = Initialised(Canvas.filled(30, 10, ' '))
             interpreter(command, start) shouldBe expected
         }
     }

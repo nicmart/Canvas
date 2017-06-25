@@ -1,6 +1,6 @@
 package springer.paint.state
 
-import springer.paint.canvas.CharCanvas
+import springer.paint.canvas.Canvas
 import springer.paint.point.Point
 import springer.paint.spec.CommonSpec
 
@@ -24,24 +24,24 @@ class PaintStateSpec extends CommonSpec {
 
         "initialise canvas on withCanvas" in {
             val state = Uninitialised[Char]()
-            state.withCanvas(CharCanvas.empty(20, 10)) shouldBe Initialised(CharCanvas.empty(20, 10))
+            state.withCanvas(Canvas.filled(20, 10, ' ')) shouldBe Initialised(Canvas.filled(20, 10, ' '))
         }
     }
 
     "An initialised PaintState" must {
         "say it is initialised" in {
-            val state = Initialised(CharCanvas.empty(20, 10))
+            val state = Initialised(Canvas.filled(20, 10, ' '))
             state.isInitialised shouldBe true
         }
 
         "map underlying canvas on mapCanvas" in {
-            val state = Initialised(CharCanvas.empty(20, 10))
-            state.mapCanvas(_ => CharCanvas.empty(5, 5)) shouldBe Initialised(CharCanvas.empty(5, 5))
+            val state = Initialised(Canvas.filled(20, 10, ' '))
+            state.mapCanvas(_ => Canvas.filled(5, 5, ' ')) shouldBe Initialised(Canvas.filled(5, 5, ' '))
         }
     }
 
     "An output PaintState" must {
-        val stateIn = Output(Queue("ah"), Initialised(CharCanvas.empty(1, 1)))
+        val stateIn = Output(Queue("ah"), Initialised(Canvas.filled(1, 1, ' ')))
         val stateUn = Output(Queue("ah"), Uninitialised())
         "say it is initialised if the underlying state is" in {
             stateIn.isInitialised shouldBe true
@@ -49,15 +49,15 @@ class PaintStateSpec extends CommonSpec {
         }
 
         "map underlying canvas on mapCanvas" in {
-            val mapped = stateIn.mapCanvas(_ => CharCanvas.empty(5, 5))
-            val expected = Output(Queue("ah"), Initialised(CharCanvas.empty(5, 5)))
+            val mapped = stateIn.mapCanvas(_ => Canvas.filled(5, 5, ' '))
+            val expected = Output(Queue("ah"), Initialised(Canvas.filled(5, 5, ' ')))
             mapped shouldBe expected
         }
 
         "properly consume its output" in {
             val (output, state) = stateIn.consumeOutput
             output shouldBe Queue("ah")
-            state shouldBe Initialised(CharCanvas.empty(1, 1))
+            state shouldBe Initialised(Canvas.filled(1, 1, ' '))
         }
     }
 
@@ -72,7 +72,7 @@ class PaintStateSpec extends CommonSpec {
         }
 
         "initialise canvas on withCanvas" in {
-            state.withCanvas(CharCanvas.empty(20, 10)) shouldBe Initialised(CharCanvas.empty(20, 10))
+            state.withCanvas(Canvas.filled(20, 10, ' ')) shouldBe Initialised(Canvas.filled(20, 10, ' '))
         }
     }
 }

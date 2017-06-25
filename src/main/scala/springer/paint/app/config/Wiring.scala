@@ -6,7 +6,6 @@ import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.plugin._
 
 trait Wiring {
-    type PainterOutput = Canvas[Char]
     type DefaultPaintState = PaintState[Char]
     lazy val initialState = Uninitialised[Char]()
 

@@ -9,14 +9,14 @@ import springer.paint.spec.CommonSpec
   */
 class CanvasSpec extends CommonSpec {
 
-    "A CharCanvas" must {
+    "A Canvas" must {
         "give an empty canvas when a new one is created" in {
-            val canvas = CharCanvas.empty(20, 10)
+            val canvas = Canvas.filled(20, 10, ' ')
             canvas.pixels shouldBe IndexedSeq.fill(10, 20)(' ')
         }
 
         "draw a character in the right position" in {
-            val canvas = CharCanvas.empty(4, 3)
+            val canvas = Canvas.filled(4, 3, ' ')
                 .drawPoint(Point(1, 1), 'x')
                 .drawPoint(Point(2, 2), 'o')
                 .drawPoint(Point(4, 3), 'o')
@@ -28,7 +28,7 @@ class CanvasSpec extends CommonSpec {
         }
 
         "get the value of a pixel" in {
-            val canvas = CharCanvas.empty(4, 3)
+            val canvas = Canvas.filled(4, 3, ' ')
                 .drawPoint(Point(1, 1), 'x')
             canvas.valueAt(Point(1, 1)) shouldBe Some('x')
             canvas.valueAt(Point(1, 2)) shouldBe Some(' ')
@@ -36,31 +36,31 @@ class CanvasSpec extends CommonSpec {
         }
 
         "ignore out of canvas positions" in {
-            val canvas = CharCanvas.empty(4, 3)
+            val canvas = Canvas.filled(4, 3, ' ')
                 .drawPoint(Point(0, 0), 'x')
                 .drawPoint(Point(5, 1), 'o')
-            canvas shouldBe CharCanvas.empty(4, 3)
+            canvas shouldBe Canvas.filled(4, 3, ' ')
         }
 
         "get the neighbours of a point" in {
-            CharCanvas.empty(4, 3).neighboursOf(Point(1, 1)).toSet shouldBe List(
+            Canvas.filled(4, 3, ' ').neighboursOf(Point(1, 1)).toSet shouldBe List(
                 Point(1, 2),
                 Point(2, 1)
             ).toSet
-            CharCanvas.empty(4, 3).neighboursOf(Point(2, 2)).toSet shouldBe List(
+            Canvas.filled(4, 3, ' ').neighboursOf(Point(2, 2)).toSet shouldBe List(
                 Point(2, 1),
                 Point(3, 2),
                 Point(2, 3),
                 Point(1, 2)
             ).toSet
-            CharCanvas.empty(2, 2).neighboursOf(Point(2, 2)).toSet shouldBe List(
+            Canvas.filled(2, 2, ' ').neighboursOf(Point(2, 2)).toSet shouldBe List(
                 Point(2, 1),
                 Point(1, 2)
             ).toSet
         }
 
         "return all the pixels" in {
-            val canvas = CharCanvas.empty(4, 3)
+            val canvas = Canvas.filled(4, 3, ' ')
                 .drawPoint(Point(1, 1), 'x')
                 .drawPoint(Point(2, 2), 'y')
             canvas.pixels shouldBe IndexedSeq(
