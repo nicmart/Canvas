@@ -4,8 +4,8 @@ import springer.paint.canvas.CharCanvas
 import springer.paint.state.{Final, Initialised, Uninitialised}
 import springer.paint.terminal.{Failure, ParserSpec, Success}
 
-class QuitPluginTest extends BasePluginSpec {
-    val plugin = QuitPlugin[Char, String]()
+class QuitPluginSpec extends BasePluginSpec {
+    val plugin = QuitPlugin[Char]()
     "The parser of the quit plugin" should {
         val parser = plugin.commandParser
         "parse valid commands" in {

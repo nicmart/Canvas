@@ -6,7 +6,7 @@ import springer.paint.terminal.CommonParsers.{positiveInt, single}
 import springer.paint.terminal.Parser
 import springer.paint.terminal.Parser._
 
-object NewCanvasPlugin extends Plugin[Char, String] {
+object NewCanvasPlugin extends Plugin[Char] {
 
     final case class NewCanvas(width: Int, height: Int)
 
@@ -29,7 +29,7 @@ object NewCanvasPlugin extends Plugin[Char, String] {
     /**
       * Interpret the command
       */
-    def interpret(command: NewCanvas, state: PaintState[Char, String]): PaintState[Char, String] =
+    def interpret(command: NewCanvas, state: PaintState[Char]): PaintState[Char] =
         Initialised(CharCanvas.empty(command.width, command.height))
 
     /**

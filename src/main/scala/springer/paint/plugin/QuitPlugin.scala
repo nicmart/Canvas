@@ -4,7 +4,7 @@ import springer.paint.state.Final
 import springer.paint.terminal.Parser
 import springer.paint.terminal.CommonParsers._
 
-final case class QuitPlugin[In, Out]() extends Plugin[In, Out] {
+final case class QuitPlugin[In]() extends Plugin[In] {
 
     object Quit
 

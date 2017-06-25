@@ -11,18 +11,18 @@ import springer.paint.terminal.CommonParsers._
   * This object cannot be created directly, but through the empty method
   * in the companion object.
   */
-final case class Painter[In, Out] private (
-    plugins: Map[String, List[PluginWithDescription[In, Out]]]
+final case class Painter[In] private (
+    plugins: Map[String, List[PluginWithDescription[In]]]
 ) {
     /**
       * A transition between PaintStates
       */
-    type StateTransition = PaintState[In, Out] => PaintState[In, Out]
+    type StateTransition = PaintState[In] => PaintState[In]
 
     /**
       * Register a new plugin with the given symbol
       */
-    def addPlugin(symbol: String, plugin: Plugin[In, Out]): Painter[In, Out] = {
+    def addPlugin(symbol: String, plugin: Plugin[In]): Painter[In] = {
         val pluginWithDesc = PluginWithDescription(plugin, plugin.description(symbol))
         val newPlugins = plugins.updated(symbol, pluginWithDesc :: plugins.getOrElse(symbol, Nil))
         Painter(newPlugins)
@@ -38,18 +38,18 @@ final case class Painter[In, Out] private (
     /**
       * Parse the input and update the state
       */
-    def run(state: PaintState[In, Out], input: String): PaintState[In, Out] =
+    def run(state: PaintState[In], input: String): PaintState[In] =
         parser.parse(input.split(" ").toList) match {
             case Success(transition, _) => transition(state)
             case Failure(msg) =>
                 state.addOutput(msg)
         }
 
-    private def commandParser: Parser[List[PluginWithDescription[In, Out]]] = {
+    private def commandParser: Parser[List[PluginWithDescription[In]]] = {
         first.map(plugins).label(commandNotAvailableString)
     }
 
-    private def sameCommandParser(ps: List[PluginWithDescription[In, Out]]): Parser[StateTransition] = {
+    private def sameCommandParser(ps: List[PluginWithDescription[In]]): Parser[StateTransition] = {
         val descriptions = ps.map(_.description).mkString("\n")
         val parser = ps.foldLeft[Parser[StateTransition]](failing()) { (parser, pluginWithDesc) =>
             val pluginParser = pluginWithDesc.plugin.parser.label(descriptions)
@@ -69,10 +69,10 @@ object Painter {
     /**
       * Decorate a plugin with a description
       */
-    case class PluginWithDescription[In, Out](plugin: Plugin[In, Out], description: String)
+    case class PluginWithDescription[In](plugin: Plugin[In], description: String)
 
     /**
       * An empty (without plugins) painter
       */
-    def empty[In, Out]: Painter[In, Out] = Painter(Map.empty)
+    def empty[In]: Painter[In] = Painter(Map.empty)
 }

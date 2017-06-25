@@ -14,7 +14,7 @@ import springer.paint.terminal.Parser
   *
   * The plugin also provide the parser that translate the user input into the new Command
   */
-trait Plugin[In, Out] {
+trait Plugin[In] {
     /**
       * The type of the new Command
       */
@@ -43,8 +43,8 @@ trait Plugin[In, Out] {
     def parser: Parser[StateTransition] =
         commandParser.map(command => interpret(command, _))
 
-    final type State = PaintState[In, Out]
-    final type Canvas = PaintCanvas[In, Out]
+    final type State = PaintState[In]
+    final type Canvas = PaintCanvas[In]
     final type StateTransition = State => State
     final type CanvasTransition = Canvas => Canvas
 }
@@ -53,7 +53,7 @@ trait Plugin[In, Out] {
   * A plugin for commands that draw on canvas.
   * The behaviour of these plugins do not depend on the current state of the canvas
   */
-trait CanvasFreePlugin[In, Out] extends Plugin[In, Out] {
+trait CanvasFreePlugin[In] extends Plugin[In] {
     /**
       * Convert the command to a canvas DSL
       */
@@ -71,7 +71,7 @@ trait CanvasFreePlugin[In, Out] extends Plugin[In, Out] {
 /**
   * A plugin that acts on a canvas and that depends on it
   */
-trait CanvasPlugin[In, Out] extends Plugin[In, Out] {
+trait CanvasPlugin[In] extends Plugin[In] {
     /**
       * Apply this command to the canvas
       */

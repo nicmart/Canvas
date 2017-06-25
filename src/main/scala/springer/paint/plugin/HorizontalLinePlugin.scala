@@ -9,7 +9,7 @@ import springer.paint.terminal.{Failure, Parser, Success}
 /**
   * Draw horizontal lines
   */
-object HorizontalLinePlugin extends CanvasFreePlugin[Char, String] {
+object HorizontalLinePlugin extends CanvasFreePlugin[Char] {
 
     final case class HorizontalLine(y: Int, fromX: Int, toX: Int)
 

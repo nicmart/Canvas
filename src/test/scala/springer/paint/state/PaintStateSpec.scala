@@ -18,12 +18,12 @@ class PaintStateSpec extends CommonSpec {
         }
 
         "remain unchanged on canvas mapping" in {
-            val state = Uninitialised[Any, Any]()
+            val state = Uninitialised[Any]()
             state.mapCanvas(_.drawPoint(Point(0, 0), ???)) shouldBe state
         }
 
         "initialise canvas on withCanvas" in {
-            val state = Uninitialised[Char, String]()
+            val state = Uninitialised[Char]()
             state.withCanvas(CharCanvas.empty(20, 10)) shouldBe Initialised(CharCanvas.empty(20, 10))
         }
     }
@@ -62,7 +62,7 @@ class PaintStateSpec extends CommonSpec {
     }
 
     "An final PaintState" must {
-        val state: PaintState[Char, String] = Final()
+        val state: PaintState[Char] = Final()
         "say it is not initialised" in {
             state.isInitialised shouldBe false
         }

@@ -10,7 +10,7 @@ import springer.paint.terminal.Parser._
 /**
   * Draw vertical lines
   */
-object VerticalLinePlugin extends CanvasFreePlugin[Char, String] {
+object VerticalLinePlugin extends CanvasFreePlugin[Char] {
 
     final case class VerticalLine(x: Int, fromY: Int, toY: Int)
 

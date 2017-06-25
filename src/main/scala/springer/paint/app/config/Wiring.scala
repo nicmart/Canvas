@@ -6,14 +6,14 @@ import springer.paint.state.{PaintState, Uninitialised}
 import springer.paint.plugin._
 
 trait Wiring {
-    type PainterOutput = Canvas[Char, String]
-    type DefaultPaintState = PaintState[Char, String]
-    lazy val initialState = Uninitialised[Char, String]()
+    type PainterOutput = Canvas[Char]
+    type DefaultPaintState = PaintState[Char]
+    lazy val initialState = Uninitialised[Char]()
 
     /**
       * Build a painter object with the desired plugins
       */
-    lazy val painter = Painter[Char, String](Map.empty)
+    lazy val painter = Painter[Char](Map.empty)
         .addPlugin("C", NewCanvasPlugin)
         .addPlugin("L", HorizontalLinePlugin)
         .addPlugin("L", VerticalLinePlugin)

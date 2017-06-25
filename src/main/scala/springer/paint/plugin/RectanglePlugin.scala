@@ -6,7 +6,7 @@ import springer.paint.terminal.CommonParsers.{int, single}
 import springer.paint.terminal.Parser
 import springer.paint.terminal.Parser._
 
-object RectanglePlugin extends CanvasFreePlugin[Char, String] {
+object RectanglePlugin extends CanvasFreePlugin[Char] {
 
     import HorizontalLinePlugin.HorizontalLine
     import VerticalLinePlugin.VerticalLine

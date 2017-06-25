@@ -8,7 +8,7 @@ import springer.paint.terminal.Parser._
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
 
-object FillPlugin extends CanvasPlugin[Char, String] {
+object FillPlugin extends CanvasPlugin[Char] {
 
     final case class Fill(from: Point, input: Char)
 
