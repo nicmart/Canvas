@@ -47,15 +47,6 @@ final case class Canvas[+In] (
     def isPointInCanvas(p: Point): Boolean = {
         p.x >= 1 && p.x <= width && p.y >= 1 && p.y <= height
     }
-
-    /**
-      * Draw any CanvasDsl action
-      */
-    def run[In2 >: In](action: CanvasDsl[In2]): Canvas[In2] =
-        action match {
-            case DrawPoint(point, in) => drawPoint(point, in)
-            case DrawSequence(actions) => actions.foldLeft[Canvas[In2]](this)(_.run(_))
-        }
 }
 
 object Canvas {

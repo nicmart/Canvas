@@ -1,8 +1,8 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{Canvas, CanvasDsl}
-import springer.paint.state.PaintState
+import springer.paint.canvas.Canvas
 import springer.paint.parser.Parser
+import springer.paint.state.PaintState
 
 /**
   * A plugin for our painter.
@@ -43,29 +43,6 @@ trait Plugin[+In] {
       */
     def parser[In2 >: In]: Parser[PaintState[In2] => PaintState[In2]] =
         commandParser.map(command => interpret(command, _))
-}
-
-/**
-  * A plugin for commands that draw on canvas.
-  * The behaviour of these plugins do not depend on the current state of the canvas
-  */
-trait CanvasFreePlugin[In] extends Plugin[In] {
-    /**
-      * Convert the command to a canvas DSL
-      */
-    def toCanvasDsl(command: Command): CanvasDsl[In]
-
-    /**
-      * Interpret the command
-      */
-    override
-    def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
-        if (state.isInitialised) {
-            state.mapCanvas(_.run(toCanvasDsl(command)))
-        } else {
-            state.addOutput("This command is available only after a canvas is created.")
-        }
-    }
 }
 
 /**

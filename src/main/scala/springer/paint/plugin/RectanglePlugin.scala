@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{Canvas, CanvasDsl, DrawSequence}
+import springer.paint.canvas.Canvas
 import springer.paint.point.Point
 import springer.paint.parser.CommonParsers.int
 import springer.paint.parser.Parser
@@ -18,7 +18,7 @@ import springer.paint.parser.Parser._
 case class RectanglePlugin[In](
     hPlugin: HorizontalLinePlugin[In],
     vPlugin: VerticalLinePlugin[In]
-) extends CanvasFreePlugin[In] {
+) extends CanvasPlugin[In] {
 
     import hPlugin.HorizontalLine
     import vPlugin.VerticalLine
@@ -42,26 +42,32 @@ case class RectanglePlugin[In](
          """.stripMargin.trim
 
 
-    def toCanvasDsl(rect: Rectangle): CanvasDsl[In] = {
+    /**
+      * Apply this command to the canvas
+      */
+    override
+    def transformCanvas[In2 >: In](rect: Rectangle, canvas: Canvas[In2]): Canvas[In2] = {
         val Rectangle(Point(x1, y1), Point(x2, y2)) = rect
 
         // This is to allow any position of the two points
         val (minX, maxX) = (Math.min(x1, x2), Math.max(x1, x2))
         val (minY, maxY) = (Math.min(y1, y2), Math.max(y1, y2))
 
-        val commands = if (minX == maxX) {
-            List(vPlugin.toCanvasDsl(VerticalLine(minX, minY, maxY)))
+        if (minX == maxX) {
+            vPlugin.transformCanvas(VerticalLine(minX, minY, maxY), canvas)
         } else if (minY == maxY) {
-            List(hPlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX)))
+            hPlugin.transformCanvas(HorizontalLine(minX, minY, maxY), canvas)
         } else {
-            List(
-                hPlugin.toCanvasDsl(HorizontalLine(minY, minX, maxX - 1)),
-                vPlugin.toCanvasDsl(VerticalLine(maxX, minY, maxY - 1)),
-                hPlugin.toCanvasDsl(HorizontalLine(maxY, maxX, minX + 1)),
-                vPlugin.toCanvasDsl(VerticalLine(minX, maxY, minY + 1))
+            val transformations = List[Canvas[In2] => Canvas[In2]](
+                hPlugin.transformCanvas(HorizontalLine(minY, minX, maxX - 1), _),
+                vPlugin.transformCanvas(VerticalLine(maxX, minY, maxY - 1), _),
+                hPlugin.transformCanvas(HorizontalLine(maxY, maxX, minX + 1), _),
+                vPlugin.transformCanvas(VerticalLine(minX, maxY, minY + 1), _)
             )
+            transformations.foldLeft(canvas) {
+                (currentCanvas, transformation) => transformation(currentCanvas)
+            }
         }
-        DrawSequence(commands)
     }
 
     /**

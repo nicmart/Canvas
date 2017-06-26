@@ -1,9 +1,8 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{Canvas, DrawPoint, DrawSequence}
+import springer.paint.canvas.Canvas
 import springer.paint.point.Point
 import springer.paint.parser.{BaseParserSpec, Failure, ParserSpec, Success}
-import DrawSequence._
 
 class RectanglePluginSpec extends BasePluginSpec {
     val plugin = RectanglePlugin(HorizontalLinePlugin('x'), VerticalLinePlugin('x'))
@@ -26,34 +25,34 @@ class RectanglePluginSpec extends BasePluginSpec {
     }
 
     "The interpreter of an rectangle plugin" should {
-        val interpreter = plugin.toCanvasDsl _
         val canvas = Canvas.filled(30, 10, ' ')
         "draw a rectangle as a sequence of points" in {
             val command = plugin.Rectangle(Point(0, 0), Point(1, 1))
-            val expected = DrawSequence(List(
-                DrawPoint(Point(0, 0), 'x'),
-                DrawPoint(Point(1, 0), 'x'),
-                DrawPoint(Point(1, 1), 'x'),
-                DrawPoint(Point(0, 1), 'x')
-            ))
-            flatten(interpreter(command)) shouldBe expected
+            val expected = canvas
+                .drawPoint(Point(0, 0), 'x')
+                .drawPoint(Point(1, 0), 'x')
+                .drawPoint(Point(1, 1), 'x')
+                .drawPoint(Point(0, 1), 'x')
+
+            plugin.transformCanvas(command, canvas) shouldBe expected
         }
 
         "draw a rectangle even if it is upside down" in {
             val command = plugin.Rectangle(Point(1, 1), Point(0, 0))
-            val expected = DrawSequence(List(
-                DrawPoint(Point(0, 0), 'x'),
-                DrawPoint(Point(1, 0), 'x'),
-                DrawPoint(Point(1, 1), 'x'),
-                DrawPoint(Point(0, 1), 'x')
-            ))
-            flatten(interpreter(command)) shouldBe expected
+            val expected = canvas
+                .drawPoint(Point(0, 0), 'x')
+                .drawPoint(Point(1, 0), 'x')
+                .drawPoint(Point(1, 1), 'x')
+                .drawPoint(Point(0, 1), 'x')
+
+            plugin.transformCanvas(command, canvas) shouldBe expected
         }
 
         "draw a degenerate rectangle as a single point" in {
-            val command = plugin.Rectangle(Point(0, 0), Point(0, 0))
-            val expected = DrawPoint(Point(0, 0), 'x')
-            flatten(interpreter(command)) shouldBe expected
+            val command = plugin.Rectangle(Point(1, 1), Point(1, 1))
+            val expected = canvas
+                  .drawPoint(Point(1, 1), 'x')
+            plugin.transformCanvas(command, canvas) shouldBe expected
         }
     }
 }

@@ -1,6 +1,6 @@
 package springer.paint.plugin
 
-import springer.paint.canvas.{Canvas, CanvasDsl, DrawPoint, DrawSequence}
+import springer.paint.canvas.Canvas
 import springer.paint.point.Point
 import springer.paint.parser.CommonParsers._
 import springer.paint.parser.Parser._
@@ -9,7 +9,7 @@ import springer.paint.parser.{Failure, Parser, Success}
 /**
   * Draw horizontal lines
   */
-case class HorizontalLinePlugin[In](symbol: In) extends CanvasFreePlugin[In] {
+case class HorizontalLinePlugin[In](symbol: In) extends CanvasPlugin[In] {
 
     final case class HorizontalLine(y: Int, fromX: Int, toX: Int)
 
@@ -29,11 +29,15 @@ case class HorizontalLinePlugin[In](symbol: In) extends CanvasFreePlugin[In] {
            |Format: $commandSymbol x1 y1 x2 y2, where y1 = y2
          """.stripMargin.trim
 
-    override def toCanvasDsl(line: HorizontalLine): CanvasDsl[In] = {
-        val actions = Plugin.range(line.fromX, line.toX).map {
-            x => DrawPoint(Point(x, line.y), symbol)
+
+    /**
+      * Apply this command to the canvas
+      */
+    override
+    def transformCanvas[In2 >: In](line: HorizontalLine, canvas: Canvas[In2]): Canvas[In2] = {
+        Plugin.range(line.fromX, line.toX).foldLeft(canvas) {
+            (currentCanvas, x) => currentCanvas.drawPoint(Point(x, line.y), symbol)
         }
-        DrawSequence(actions.toList)
     }
 
     /**

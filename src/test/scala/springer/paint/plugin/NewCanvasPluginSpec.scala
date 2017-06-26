@@ -1,9 +1,8 @@
 package springer.paint.plugin
 
 import springer.paint.canvas.Canvas
-import springer.paint.point.Point
 import springer.paint.state.{Initialised, Uninitialised}
-import springer.paint.parser.{BaseParserSpec, Failure, ParserSpec, Success}
+import springer.paint.parser.{Failure, Success}
 
 class NewCanvasPluginSpec extends BasePluginSpec {
     val plugin = NewCanvasPlugin(' ')
