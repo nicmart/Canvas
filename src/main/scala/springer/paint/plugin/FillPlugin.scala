@@ -26,8 +26,8 @@ case class FillPlugin[In](inputParser: Parser[In]) extends CanvasPlugin[In] {
       */
     def description(commandSymbol: String): String =
         s"""
-           |Bucket fill command: fill an area with a specific character {c}
-           |Format: $commandSymbol x y {c}
+           |Bucket fill command: fill an area with a specific character 'c'
+           |Format: $commandSymbol x y c
         """.stripMargin.trim
 
     /**
