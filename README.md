@@ -12,16 +12,27 @@ Tests can be run through sbt as well:
 sbt test
 ```
 
+## Behaviour decisions on edge cases
+The requirements did not specify the behaviour on some edge-cases.
+These are the decisions I took:
+
+ 1. It is possible to draw lines and rectangles whose edges are outside the canvas. Only the pixels in the canvas will be drawn.
+ 2. A line is treated like any other pixel. So it is possible to change the characters of a line applying the fill command
+   on one of its points. So drawing (L 1 1 10 1) and then (B 1 1 o) will draw a line of "o" from (1, 1) to (10, 1) 
+ 3. Horizontal (vertical) lines can be expressed from right-to-left (top-down) or left-to-right (bottom-up)
+ 4. Rectangles can be expressed with any pair of points. The first point does not need to be the upper-left.
+   
+
 ## Design
 ### Generic design decisions
-In general I've to stay as much as possible a in a functional world, where side-effects and mutability are
+In general I've tried to stay as much as possible a in a functional world, where side-effects and mutability are
  not allowed.
  
 #### Immutability
 In this project all the data structures are immutable. Even when we need to "update" something, a new copy
 of that thing is created instead of updating it in place.
 
-In tests this immutability, together with case classes, is exploited a lot, since it allows for all the components to have a value-semantic,
+In tests this immutability, together with case classes, is exploited a lot, since it allows for all the components to have value-semantic,
 making life much easier when comparing objects.
 
 #### Purity
@@ -32,21 +43,23 @@ It is `PaintApp`, the object that implements the main application loop.
 
 #### Canvas input type and variance
 All the components abstract on the input type of "colors" for points. In this way it would be easy
-to re-use the same component to implement a paint app that draws, instead of single characters,
-full RGB points.
+to re-use the same components to implement a paint app that draws, instead of single characters on a terminal,
+full RGB colors on a bitmap.
 
-I've also tried to express the variance of all this higher-kinded types.
+I've also tried to express the variance of all higher-kinded types.
 This allows to define special states as objects, like the state `Final` (see below), that is a case object
 for all kind canvases, (i.e. it is a `PaintState[Nothing]`).
 
 ### Canvas
-The `Canvas` object is the low-level component that implement a single drawing primitive: drawing a point.
+The `Canvas` object is the low-level component that implements a single drawing primitive: drawing a point.
 `Canvas` case class abstracts on the input type, so we can re-use the same implementation either to draw chracters
 (our case), or for example colors encoded in java.awt.Color` objects.
 
+Drawing a point does not mutate the canvas. Instead, a new canvas, with updated pixels, will be returned.
+
 ### Canvas Renderer
 A `CanvasRenderer` is able to convert a canvas to something flat, like a `String`.
-Our main Canvas Renderer is `BorderCanvasRenderer`, and it is able to add some border around the canvas.
+Our main Canvas Renderer is `BorderCanvasRenderer`, that adds some border around the canvas.
 
 ### PaintState
 The state of the application is encoded in `PaintState`.
@@ -64,7 +77,7 @@ It is an algebraic data type whose cases are the states the application can be i
 There is a small parser library under the `springer.paint.parser` namespace.
 The parser library is used inside `Plugins` (see below) to extract user input into structured commands.
 
-Almost all the parser are built composing elementary ones. For example this is a parser that parses 2 integers
+Almost all the parsers are built composing elementary ones. For example this is a parser that parses 2 integers
   and return a `Point`:
   
 ```scala
