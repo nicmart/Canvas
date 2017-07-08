@@ -60,7 +60,8 @@ trait CanvasPlugin[In] extends Plugin[In] {
     override
     def interpret[In2 >: In](command: Command, state: PaintState[In2]): PaintState[In2] = {
         if (state.isInitialised) {
-            state.mapCanvas[In2](canvas => transformCanvas(command, canvas))
+            val newState = state.mapCanvas[In2](canvas => transformCanvas(command, canvas))
+            state.next(newState)
         } else {
             state.addOutput("This command is available only after a canvas is created.")
         }

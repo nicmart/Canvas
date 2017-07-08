@@ -10,12 +10,13 @@ import scala.collection.immutable.Queue
   * PaintState is a closed list of states
   */
 sealed trait PaintState[+In] {
+
     /**
       * Tell if the state is initialised, i.e. if  we have a canvas
       */
     def isInitialised: Boolean = this match {
-        case Initialised(_) => true
-        case Output(_, Initialised(_)) => true
+        case Initialised(_, _) => true
+        case Output(_, Initialised(_, _)) => true
         case _ => false
     }
 
@@ -31,7 +32,7 @@ sealed trait PaintState[+In] {
       * Apply a transformation to a canvas, if we are in an initialised state
       */
     def mapCanvas[In2 >: In](f: Canvas[In] => Canvas[In2]): PaintState[In2] = this match {
-        case Initialised(canvas) => Initialised(f(canvas))
+        case Initialised(canvas, _) => Initialised(f(canvas))
         case Output(messages, state) => Output(messages, state.mapCanvas(f))
         case _ => this
     }
@@ -51,6 +52,11 @@ sealed trait PaintState[+In] {
         case Output(messages, state) => (messages, state)
         case _ => (Queue.empty, this)
     }
+
+    def next[In2 >: In](state: PaintState[In2]): PaintState[In2] = state match {
+        case Initialised(canvas, history) => Initialised(canvas, this :: history)
+        case _ => state
+    }
 }
 
 /**
@@ -61,7 +67,7 @@ case object Uninitialised extends PaintState[Nothing]
 /**
   * An initialised state, i.e. a state with a canvas
   */
-final case class Initialised[In](canvas: Canvas[In]) extends PaintState[In]
+final case class Initialised[In](canvas: Canvas[In], history: List[PaintState[In]] = Nil) extends PaintState[In]
 
 /**
   * The final state, after which the program halts
@@ -72,5 +78,4 @@ case object Final extends PaintState[Nothing]
   * Output state, in which there is some output to print
   */
 final case class Output[In](messages: Queue[String], state: PaintState[In]) extends PaintState[In]
-
 

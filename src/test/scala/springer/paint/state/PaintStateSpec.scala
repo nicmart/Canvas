@@ -66,4 +66,6 @@ class PaintStateSpec extends CommonSpec {
             state.mapCanvas(_.drawPoint(Point(0, 0), ???)) shouldBe state
         }
     }
+
+    ""
 }

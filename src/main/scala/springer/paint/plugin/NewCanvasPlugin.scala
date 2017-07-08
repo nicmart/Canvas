@@ -35,8 +35,10 @@ case class NewCanvasPlugin[In](emptySymbol: In) extends Plugin[In] {
     /**
       * Interpret the command
       */
-    override def interpret[In2 >: In](command: NewCanvas, state: PaintState[In2]): PaintState[In2] =
-        Initialised(Canvas.filled(command.width, command.height, emptySymbol))
+    override def interpret[In2 >: In](command: NewCanvas, state: PaintState[In2]): PaintState[In2] = {
+        val newState = Initialised(Canvas.filled(command.width, command.height, emptySymbol))
+        state.next(newState)
+    }
 
     /**
       * Parse an user input into this command
